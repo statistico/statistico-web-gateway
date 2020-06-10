@@ -1,1 +1,3 @@
-# statistico-web-gateway
+# Statistico Web Gateway
+
+API Gateway for Statistico Web Applications
