@@ -1,0 +1,8 @@
+version: "3.3"
+services:
+  rest:
+    build:
+      dockerfile: ./docker/Dockerfile
+      context: .
+    tty: true
+    command: ["./rest"]
