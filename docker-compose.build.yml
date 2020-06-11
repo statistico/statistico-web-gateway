@@ -2,9 +2,16 @@ version: "3.3"
 services:
   rest:
     build:
-      dockerfile: ./docker/Dockerfile
+      dockerfile: ./docker/rest/Dockerfile
       context: .
     ports:
       - "8080:80"
     tty: true
     command: ["./rest"]
+
+  test:
+    build:
+      dockerfile: ./docker/test/Dockerfile
+      context: .
+    volumes:
+      - .:/opt

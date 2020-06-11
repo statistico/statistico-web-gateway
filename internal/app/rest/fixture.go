@@ -9,7 +9,7 @@ import (
 )
 
 type FixtureHandler struct {
-	Composer *composer.FixtureSearch
+	Composer composer.FixtureHandler
 }
 
 func (f FixtureHandler) FixtureSearch(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -25,7 +25,11 @@ func (f FixtureHandler) FixtureSearch(w http.ResponseWriter, r *http.Request, _ 
 
 	fixtures := f.Composer.Search(q)
 
-	successResponse(w, http.StatusOK, fixtures)
+	res := fixtureResponse{
+		Fixtures: fixtures,
+	}
+
+	successResponse(w, http.StatusOK, res)
 }
 
 type fixtureResponse struct {
