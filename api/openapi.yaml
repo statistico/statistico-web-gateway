@@ -59,23 +59,23 @@ paths:
 
 components:
   schemas:
-    Date:
+    Competition:
       type: object
       properties:
-        utc:
-          $ref: '#/components/schemas/DateUTC'
-        rfc:
-          $ref: '#/components/schemas/DateRFC3339'
+        id:
+          type: integer
+          example: 475
+        name:
+          type: string
+          example: English Premier League
+        isCup:
+          type: boolean
+          example: false
 
     DateRFC3339:
       type: string
       description: "An RFC-3339 valid datetime"
       example: '2018-01-24T20:21:44+00:00'
-
-    DateUTC:
-      type: integer
-      description: "UTC representation of date/time"
-      example: 1573733379
 
     Error:
       type: object
@@ -100,16 +100,20 @@ components:
         id:
           type: integer
           example: 16679
-        home_team:
+        competition:
+          $ref: '#/components/schemas/Competition'
+        season:
+          $ref: '#/components/schemas/Season'
+        homeTeam:
           $ref: '#/components/schemas/Team'
-        away_team:
+        awayTeam:
           $ref: '#/components/schemas/Team'
         venue:
           $ref: '#/components/schemas/Venue'
         round:
           $ref: '#/components/schemas/Round'
-        date_time:
-          $ref: '#/components/schemas/Date'
+        date:
+          $ref: '#/components/schemas/DateRFC3339'
 
     FixtureStatFilter:
       type: object
@@ -172,13 +176,26 @@ components:
         name:
           type: string
           example: "5"
-        season_id:
+        seasonId:
           type: integer
           example: 452
-        start_date:
-          $ref: '#/components/schemas/Date'
-        end_date:
-          $ref: '#/components/schemas/Date'
+        startDate:
+          $ref: '#/components/schemas/DateRFC3339'
+        endDate:
+          $ref: '#/components/schemas/DateRFC3339'
+
+    Season:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 475
+        name:
+          type: string
+          example: 2019/2020
+        isCurrent:
+          type: boolean
+          example: false
 
     StandardResponse:
       type: object
