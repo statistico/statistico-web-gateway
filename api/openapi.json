@@ -44,7 +44,7 @@
                     }
                   },
                   "statFilters": {
-                    "type": "array",
+                    "type": "object",
                     "items": {
                       "$ref": "#/components/schemas/FixtureStatFilter"
                     }

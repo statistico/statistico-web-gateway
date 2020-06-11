@@ -8,5 +8,5 @@ type Fixture struct {
 	HomeTeam    Team        `json:"homeTeam"`
 	AwayTeam    Team        `json:"awayTeam"`
 	Venue       Venue       `json:"venue"`
-	Date        string      `json:"date"`
+	Date        JsonDate    `json:"date"`
 }
