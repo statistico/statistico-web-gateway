@@ -5,9 +5,15 @@ import (
 	"time"
 )
 
+type FixtureHandler interface {
+	Search(q *FixtureSearchQuery) []*app.Fixture
+}
+
 type FixtureSearch struct{}
 
 func (f FixtureSearch) Search(q *FixtureSearchQuery) []*app.Fixture {
+	// Call proxy struct in here once implemented
+
 	fixtures := []*app.Fixture{}
 
 	fix := &app.Fixture{
@@ -50,18 +56,18 @@ func (f FixtureSearch) Search(q *FixtureSearchQuery) []*app.Fixture {
 }
 
 type FixtureSearchQuery struct {
-	LeagueIds         []uint64           `json:"leagueIds"`
+	LeagueIds         []uint64          `json:"leagueIds"`
 	DateFrom          time.Time         `json:"dateTo"`
 	DateTo            time.Time         `json:"dateFrom"`
-	FixtureStatFilter FixtureStatFilter  `json:"statFilter"`
+	FixtureStatFilter FixtureStatFilter `json:"statFilter"`
 }
 
 type FixtureStatFilter struct {
-	Games   uint8     `json:"games"`
-	Metric  string    `json:"metric"`
-	Measure string    `json:"measure"`
-	Team    string    `json:"team"`
-	Type    string    `json:"type"`
-	Value   float32   `json:"value"`
-	Venue   string    `json:"venue"`
+	Games   uint8   `json:"games"`
+	Metric  string  `json:"metric"`
+	Measure string  `json:"measure"`
+	Team    string  `json:"team"`
+	Type    string  `json:"type"`
+	Value   float32 `json:"value"`
+	Venue   string  `json:"venue"`
 }
