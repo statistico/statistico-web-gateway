@@ -4,5 +4,7 @@ services:
     build:
       dockerfile: ./docker/Dockerfile
       context: .
+    ports:
+      - "8080:80"
     tty: true
     command: ["./rest"]

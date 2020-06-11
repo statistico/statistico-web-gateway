@@ -14,7 +14,6 @@ FROM alpine
 RUN apk --no-cache add ca-certificates
 WORKDIR /opt
 COPY ./api ./opt/api
-COPY ./bin ./bin
 COPY --from=builder /app/rest .
 
 CMD ["/bin/sh"]
