@@ -7,7 +7,6 @@ import (
 )
 
 func RoutePath(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	w.WriteHeader(http.StatusOK)
 	http.ServeFile(w, r, "./opt/api/index.html")
 }
 
@@ -17,6 +16,5 @@ func HealthCheck(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func RenderApiDocs(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	w.WriteHeader(http.StatusOK)
 	http.ServeFile(w, r, "./opt/api/openapi.json")
 }
