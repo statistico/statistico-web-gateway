@@ -23,7 +23,12 @@ func (f FixtureHandler) FixtureSearch(w http.ResponseWriter, r *http.Request, _ 
 		return
 	}
 
-	fixtures := f.Composer.Search(q)
+	fixtures, err := f.Composer.Search(q)
+
+	if err != nil {
+		failResponse(w, 500, err)
+		return
+	}
 
 	res := fixtureResponse{
 		Fixtures: fixtures,
@@ -33,5 +38,5 @@ func (f FixtureHandler) FixtureSearch(w http.ResponseWriter, r *http.Request, _ 
 }
 
 type fixtureResponse struct {
-	Fixtures []*app.Fixture `json:"fixtures"`
+	Fixtures map[uint64][]*app.Fixture `json:"fixtures"`
 }

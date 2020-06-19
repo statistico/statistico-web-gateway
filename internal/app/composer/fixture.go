@@ -2,72 +2,72 @@ package composer
 
 import (
 	"github.com/statistico/statistico-web-gateway/internal/app"
+	"github.com/statistico/statistico-web-gateway/internal/app/proxy"
 	"time"
 )
 
-type FixtureHandler interface {
-	Search(q *FixtureSearchQuery) []*app.Fixture
-}
-
-type FixtureSearch struct{}
-
-func (f FixtureSearch) Search(q *FixtureSearchQuery) []*app.Fixture {
-	// Call proxy struct in here once implemented
-
-	fixtures := []*app.Fixture{}
-
-	fix := &app.Fixture{
-		ID: 1234,
-		Competition: app.Competition{
-			ID:    567,
-			Name:  "English Premier League",
-			IsCup: false,
-		},
-		Season: app.Season{
-			ID:        89,
-			Name:      "2019/2020",
-			IsCurrent: true,
-		},
-		Round: app.Round{
-			ID:        2,
-			Name:      "2",
-			SeasonID:  89,
-			StartDate: app.JsonDate(time.Now()),
-			EndDate:   app.JsonDate(time.Now()),
-		},
-		HomeTeam: app.Team{
-			ID:   1,
-			Name: "West Ham United",
-		},
-		AwayTeam: app.Team{
-			ID:   10,
-			Name: "Newcastle United",
-		},
-		Venue: app.Venue{
-			ID:   4,
-			Name: "London Stadium",
-		},
-		Date: app.JsonDate(time.Now()),
-	}
-
-	fixtures = append(fixtures, fix)
-
-	return fixtures
-}
-
 type FixtureSearchQuery struct {
-	LeagueIds         []uint64          `json:"leagueIds"`
 	DateFrom          time.Time         `json:"dateTo"`
 	DateTo            time.Time         `json:"dateFrom"`
-	FixtureStatFilter FixtureStatFilter `json:"statFilter"`
+	SeasonIds         []uint64          `json:"seasonId"`
+	StatFilter        app.StatFilter    `json:"statFilter"`
 }
 
-type FixtureStatFilter struct {
-	Games   uint8   `json:"games"`
-	Metric  string  `json:"metric"`
-	Measure string  `json:"measure"`
-	Team    string  `json:"team"`
-	Type    string  `json:"type"`
-	Value   float32 `json:"value"`
-	Venue   string  `json:"venue"`
+type FixtureHandler interface {
+	Search(q *FixtureSearchQuery) (map[uint64][]*app.Fixture, error)
+}
+
+type FixtureSearch struct{
+	performance *proxy.PerformanceService
+	fixture     *proxy.FixtureService
+}
+
+func (f FixtureSearch) Search(q *FixtureSearchQuery) (map[uint64][]*app.Fixture, error) {
+	fixtures := map[uint64][]*app.Fixture{}
+
+	for _, id := range q.SeasonIds {
+		fetched, err := f.fixture.FixtureForSeasonBetween(id, q.DateFrom, q.DateTo)
+
+		if err != nil {
+			return nil, err
+		}
+
+		teams, err := f.performance.ProxyTeamsMatchingFilterRequest(q.StatFilter, []uint64{id})
+
+		if err != nil {
+			return nil, err
+		}
+
+		fixtures[id] = filterFixtures(q.StatFilter.Venue, fetched, teams)
+	}
+
+	return fixtures, nil
+}
+
+func filterFixtures(venue string, fix []*app.Fixture, teams []*app.Team) []*app.Fixture {
+	var fixtures []*app.Fixture
+
+	for _, fix := range fix {
+		for _, team := range teams {
+			if venue == "home" {
+				if fix.HomeTeam.ID == team.ID {
+					fixtures = append(fixtures, fix)
+				}
+			}
+
+			if venue == "away" {
+				if fix.AwayTeam.ID == team.ID {
+					fixtures = append(fixtures, fix)
+				}
+			}
+
+			if venue == "home_away" {
+				if fix.HomeTeam.ID == team.ID || fix.AwayTeam.ID == team.ID {
+					fixtures = append(fixtures, fix)
+				}
+			}
+		}
+	}
+
+	return fixtures
 }
