@@ -34,10 +34,10 @@ func (t teamClient) TeamById(ctx context.Context, req *proto.TeamRequest) (*app.
 	}
 
 	team := app.Team{
-		ID:           response.GetId(),
-		Name:         response.GetName(),
-		CountryID:    response.GetCountryId(),
-		VenueID:      response.GetVenueId(),
+		ID:        response.GetId(),
+		Name:      response.GetName(),
+		CountryID: response.GetCountryId(),
+		VenueID:   response.GetVenueId(),
 	}
 
 	if response.GetShortCode() != nil {

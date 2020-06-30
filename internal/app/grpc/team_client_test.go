@@ -64,10 +64,10 @@ func TestTeamDataClient_TeamById(t *testing.T) {
 		request := proto.TeamRequest{TeamId: 1}
 
 		response := proto.Team{
-			Id:             1,
-			Name:           "West Ham United",
-			CountryId:      8,
-			VenueId:        214,
+			Id:        1,
+			Name:      "West Ham United",
+			CountryId: 8,
+			VenueId:   214,
 		}
 
 		ctx := context.Background()
