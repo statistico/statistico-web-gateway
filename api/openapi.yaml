@@ -3,7 +3,7 @@ info:
   title: Statistico Web API
   version: 1.0.0
 servers:
-  - url: https://api.statisitco.io
+  - url: https://api.statistico.io
 paths:
   /fixture-search:
     post:
