@@ -28,9 +28,9 @@ func (t teamClient) TeamById(ctx context.Context, req *proto.TeamRequest) (*app.
 			default:
 				return nil, errors.ErrorBadGateway
 			}
-		} else {
-			return nil, errors.ErrorInternalServerError
 		}
+
+		return nil, errors.ErrorInternalServerError
 	}
 
 	team := app.Team{
