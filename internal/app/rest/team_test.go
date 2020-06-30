@@ -99,7 +99,7 @@ func TestTeamHandler_TeamById(t *testing.T) {
 
 		handler.TeamById(res, req, params)
 
-		expected := `{"status":"fail","data":[{"message":"the resource requested does not exist","code":1}]}`
+		expected := `{"status":"fail","data":[{"message":"team with id '241' does not exist","code":1}]}`
 
 		assert.Equal(t, http.StatusNotFound, res.Code)
 		assert.Equal(t, expected, res.Body.String())

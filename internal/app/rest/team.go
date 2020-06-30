@@ -19,7 +19,7 @@ func (t *TeamHandler) TeamById(w http.ResponseWriter, _ *http.Request, ps httpro
 	id, err := strconv.Atoi(param)
 
 	if err != nil {
-		failResponse(w, http.StatusNotFound, errors.New(fmt.Sprintf("team with id '%s' does not exist", param)))
+		notFoundResponse(w, param)
 		return
 	}
 
@@ -27,7 +27,7 @@ func (t *TeamHandler) TeamById(w http.ResponseWriter, _ *http.Request, ps httpro
 
 	if err != nil {
 		if err == e.ErrorNotFound {
-			failResponse(w, http.StatusNotFound, err)
+			notFoundResponse(w, param)
 			return
 		}
 
@@ -40,4 +40,8 @@ func (t *TeamHandler) TeamById(w http.ResponseWriter, _ *http.Request, ps httpro
 
 func NewTeamHandler(c composer.TeamComposer) *TeamHandler {
 	return &TeamHandler{c}
+}
+
+func notFoundResponse(w http.ResponseWriter, id string) {
+	failResponse(w, http.StatusNotFound, errors.New(fmt.Sprintf("team with id '%s' does not exist", id)))
 }
