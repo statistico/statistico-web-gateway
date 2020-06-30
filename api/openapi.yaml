@@ -8,7 +8,7 @@ paths:
   /fixture-search:
     post:
       tags:
-        - Fixture Search
+        - In development
       description: Search for fixtures based on filters
       requestBody:
         content:
@@ -50,6 +50,36 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/Fixture'
+        default:
+          description: Default non 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+
+  /team/{id}:
+    get:
+      tags:
+        - Team
+      description: Get a team resource
+      parameters:
+        - name: id
+          in: path
+          description: The id of the team resource
+          required: true
+          schema:
+            type: string
+            example: 1
+      responses:
+        200:
+          description: The team resource
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Team'
         default:
           description: Default non 200 response
           content:
@@ -226,6 +256,27 @@ components:
         name:
           type: string
           example: "West Ham United"
+        shortCode:
+          type: string
+          example: "WHU"
+          nullable: true
+        countryId:
+          type: integer
+          example: 264
+        venueId:
+          type: integer
+          example: 214
+        isNationalTeam:
+          type: boolean
+          example: false
+        founded:
+          type: integer
+          example: 1895
+          nullable: true
+        logo:
+          type: string
+          example: https://logo.com/1.png
+          nullable: true
 
     Venue:
       type: object
