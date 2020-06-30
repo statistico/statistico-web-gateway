@@ -24,12 +24,12 @@ func (t teamClient) TeamById(ctx context.Context, req *proto.TeamRequest) (*app.
 		if e, ok := status.FromError(err); ok {
 			switch e.Code() {
 			case codes.NotFound:
-				return nil, errors.ErrNotFound
+				return nil, errors.ErrorNotFound
 			default:
 				return nil, errors.ErrorBadGateway
 			}
 		} else {
-			return nil, errors.ErrInternalServerError
+			return nil, errors.ErrorInternalServerError
 		}
 	}
 
