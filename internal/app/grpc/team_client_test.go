@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"github.com/golang/protobuf/ptypes/wrappers"
+	"github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus/hooks/test"
 	g "github.com/statistico/statistico-web-gateway/internal/app/grpc"
 	"github.com/statistico/statistico-web-gateway/internal/app/grpc/proto"
 	"github.com/statistico/statistico-web-gateway/internal/app/mock"
@@ -19,7 +21,8 @@ func TestTeamDataClient_TeamById(t *testing.T) {
 		t.Helper()
 
 		m := new(mock.TeamClient)
-		client := g.NewTeamClient(m)
+		logger, hook := test.NewNullLogger()
+		client := g.NewTeamClient(m, logger)
 
 		request := proto.TeamRequest{TeamId: 1}
 
@@ -53,13 +56,16 @@ func TestTeamDataClient_TeamById(t *testing.T) {
 		a.Equal(false, team.NationalTeam)
 		a.Equal(uint64(1895), *team.Founded)
 		a.Equal("logo", *team.Logo)
+		a.Nil(hook.LastEntry())
+		m.AssertExpectations(t)
 	})
 
 	t.Run("parses nullable fields from team returned in response", func(t *testing.T) {
 		t.Helper()
 
 		m := new(mock.TeamClient)
-		client := g.NewTeamClient(m)
+		logger, hook := test.NewNullLogger()
+		client := g.NewTeamClient(m, logger)
 
 		request := proto.TeamRequest{TeamId: 1}
 
@@ -89,13 +95,16 @@ func TestTeamDataClient_TeamById(t *testing.T) {
 		a.Equal(false, team.NationalTeam)
 		a.Nil(team.Founded)
 		a.Nil(team.Logo)
+		a.Nil(hook.LastEntry())
+		m.AssertExpectations(t)
 	})
 
 	t.Run("returns a not found if not found error is returned by grpc client", func(t *testing.T) {
 		t.Helper()
 
 		m := new(mock.TeamClient)
-		client := g.NewTeamClient(m)
+		logger, hook := test.NewNullLogger()
+		client := g.NewTeamClient(m, logger)
 
 		request := proto.TeamRequest{TeamId: 1}
 
@@ -112,13 +121,16 @@ func TestTeamDataClient_TeamById(t *testing.T) {
 		}
 
 		assert.Equal(t, "the resource requested does not exist", err.Error())
+		assert.Nil(t, hook.LastEntry())
+		m.AssertExpectations(t)
 	})
 
 	t.Run("returns a bad gateway error", func(t *testing.T) {
 		t.Helper()
 
 		m := new(mock.TeamClient)
-		client := g.NewTeamClient(m)
+		logger, hook := test.NewNullLogger()
+		client := g.NewTeamClient(m, logger)
 
 		request := proto.TeamRequest{TeamId: 1}
 
@@ -135,13 +147,16 @@ func TestTeamDataClient_TeamById(t *testing.T) {
 		}
 
 		assert.Equal(t, "error response returned from external service", err.Error())
+		assert.Equal(t, 1, len(hook.Entries))
+		assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 	})
 
 	t.Run("returns an internal error", func(t *testing.T) {
 		t.Helper()
 
 		m := new(mock.TeamClient)
-		client := g.NewTeamClient(m)
+		logger, hook := test.NewNullLogger()
+		client := g.NewTeamClient(m, logger)
 
 		request := proto.TeamRequest{TeamId: 1}
 
@@ -158,5 +173,7 @@ func TestTeamDataClient_TeamById(t *testing.T) {
 		}
 
 		assert.Equal(t, "internal server error", err.Error())
+		assert.Equal(t, 1, len(hook.Entries))
+		assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 	})
 }

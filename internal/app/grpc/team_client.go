@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"context"
+	"github.com/sirupsen/logrus"
 	"github.com/statistico/statistico-web-gateway/internal/app"
 	"github.com/statistico/statistico-web-gateway/internal/app/errors"
 	"github.com/statistico/statistico-web-gateway/internal/app/grpc/proto"
@@ -15,6 +16,7 @@ type TeamClient interface {
 
 type teamClient struct {
 	client proto.TeamServiceClient
+	logger *logrus.Logger
 }
 
 func (t teamClient) TeamById(ctx context.Context, req *proto.TeamRequest) (*app.Team, error) {
@@ -26,9 +28,12 @@ func (t teamClient) TeamById(ctx context.Context, req *proto.TeamRequest) (*app.
 			case codes.NotFound:
 				return nil, errors.ErrorNotFound
 			default:
+				t.logError(err)
 				return nil, errors.ErrorBadGateway
 			}
 		}
+
+		t.logError(err)
 
 		return nil, errors.ErrorInternalServerError
 	}
@@ -59,6 +64,10 @@ func (t teamClient) TeamById(ctx context.Context, req *proto.TeamRequest) (*app.
 	return &team, nil
 }
 
-func NewTeamClient(p proto.TeamServiceClient) TeamClient {
-	return teamClient{client: p}
+func (t teamClient) logError(err error) {
+	t.logger.Errorf("Error in team client %s", err.Error())
+}
+
+func NewTeamClient(p proto.TeamServiceClient, log *logrus.Logger) TeamClient {
+	return teamClient{client: p, logger: log}
 }
