@@ -23,16 +23,17 @@ func (t teamClient) TeamById(ctx context.Context, req *proto.TeamRequest) (*app.
 	response, err := t.client.GetTeamByID(ctx, req)
 
 	if err != nil {
-		t.logger.Warnf("Error in team client %s", err.Error())
-
 		if e, ok := status.FromError(err); ok {
 			switch e.Code() {
 			case codes.NotFound:
 				return nil, errors.ErrorNotFound
 			default:
+				t.logError(err)
 				return nil, errors.ErrorBadGateway
 			}
 		}
+
+		t.logError(err)
 
 		return nil, errors.ErrorInternalServerError
 	}
@@ -61,6 +62,10 @@ func (t teamClient) TeamById(ctx context.Context, req *proto.TeamRequest) (*app.
 	}
 
 	return &team, nil
+}
+
+func (t teamClient) logError(err error) {
+	t.logger.Errorf("Error in team client %s", err.Error())
 }
 
 func NewTeamClient(p proto.TeamServiceClient, log *logrus.Logger) TeamClient {

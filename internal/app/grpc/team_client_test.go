@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/golang/protobuf/ptypes/wrappers"
+	"github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/test"
 	g "github.com/statistico/statistico-web-gateway/internal/app/grpc"
 	"github.com/statistico/statistico-web-gateway/internal/app/grpc/proto"
@@ -128,7 +129,8 @@ func TestTeamDataClient_TeamById(t *testing.T) {
 		t.Helper()
 
 		m := new(mock.TeamClient)
-		client := g.NewTeamClient(m)
+		logger, hook := test.NewNullLogger()
+		client := g.NewTeamClient(m, logger)
 
 		request := proto.TeamRequest{TeamId: 1}
 
@@ -145,13 +147,16 @@ func TestTeamDataClient_TeamById(t *testing.T) {
 		}
 
 		assert.Equal(t, "error response returned from external service", err.Error())
+		assert.Equal(t, 1, len(hook.Entries))
+		assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 	})
 
 	t.Run("returns an internal error", func(t *testing.T) {
 		t.Helper()
 
 		m := new(mock.TeamClient)
-		client := g.NewTeamClient(m)
+		logger, hook := test.NewNullLogger()
+		client := g.NewTeamClient(m, logger)
 
 		request := proto.TeamRequest{TeamId: 1}
 
@@ -168,5 +173,7 @@ func TestTeamDataClient_TeamById(t *testing.T) {
 		}
 
 		assert.Equal(t, "internal server error", err.Error())
+		assert.Equal(t, 1, len(hook.Entries))
+		assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 	})
 }
