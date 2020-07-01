@@ -4,6 +4,9 @@ services:
     build:
       dockerfile: ./docker/rest/Dockerfile
       context: .
+    environment:
+      STATISTICO_DATA_SERVICE_HOST: statistico-data-grpc
+      STATISTICO_DATA_SERVICE_PORT: 50051
     ports:
       - "8080:80"
     tty: true
