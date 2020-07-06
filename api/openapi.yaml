@@ -273,30 +273,27 @@ components:
         id:
           type: integer
           example: 1720918
+        homeTeam:
+          $ref: '#/components/schemas/Team'
+        awayTeam:
+          $ref: '#/components/schemas/Team'
         season:
           $ref: '#/components/schemas/Season'
         round:
           $ref: '#/components/schemas/Round'
         venue:
           $ref: '#/components/schemas/Venue'
-        dateTime:
+        date:
           $ref: '#/components/schemas/DateRFC3339'
-        matchData:
+        stats:
           type: object
           properties:
-            homeTeam:
-              $ref: '#/components/schemas/Team'
-            awayTeam:
-              $ref: '#/components/schemas/Team'
-            stats:
-              type: object
-              properties:
-                homeScore:
-                  type: integer
-                  example: 3
-                awayScore:
-                  type: integer
-                  example: 1
+            homeScore:
+              type: integer
+              example: 3
+            awayScore:
+              type: integer
+              example: 1
 
     Round:
       type: object
