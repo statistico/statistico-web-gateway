@@ -31,8 +31,8 @@ message MatchStats {
     google.protobuf.StringValue pitch = 1;
     google.protobuf.StringValue home_formation = 2;
     google.protobuf.StringValue away_formation = 3;
-    google.protobuf.Int32Value home_score = 4;
-    google.protobuf.Int32Value away_score = 5;
+    google.protobuf.UInt32Value home_score = 4;
+    google.protobuf.UInt32Value away_score = 5;
     google.protobuf.Int32Value home_pen_score = 6;
     google.protobuf.Int32Value away_pen_score = 7;
     google.protobuf.StringValue half_time_score = 8;

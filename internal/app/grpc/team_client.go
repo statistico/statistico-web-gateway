@@ -38,7 +38,9 @@ func (t teamClient) TeamById(ctx context.Context, req *proto.TeamRequest) (*app.
 		return nil, errors.ErrorInternalServerError
 	}
 
-	return convertTeam(response), nil
+	team := convertTeam(response)
+
+	return &team, nil
 }
 
 func (t teamClient) logError(err error) {

@@ -20,12 +20,12 @@ func convertResult(result *proto.Result) (*app.Result, error) {
 	}
 
 	r := app.Result{
-		ID:       0,
-		HomeTeam: *convertTeam(result.GetHomeTeam()),
-		AwayTeam: *convertTeam(result.GetAwayTeam()),
-		Season:   *convertSeason(result.GetSeason()),
-		Round:    *round,
-		Venue:    *convertVenue(result.GetVenue()),
+		ID:       result.GetId(),
+		HomeTeam: convertTeam(result.GetHomeTeam()),
+		AwayTeam: convertTeam(result.GetAwayTeam()),
+		Season:   convertSeason(result.GetSeason()),
+		Round:    round,
+		Venue:    convertVenue(result.GetVenue()),
 		DateTime: app.JsonDate(d),
 		Stats:    convertResultStats(result.GetStats()),
 	}
@@ -33,35 +33,31 @@ func convertResult(result *proto.Result) (*app.Result, error) {
 	return &r, nil
 }
 
-func convertResultStats(stats *proto.MatchStats) *app.ResultStats {
-	if stats.GetHomeScore() == nil && stats.GetAwayScore() == nil {
-		return nil
-	}
-
+func convertResultStats(stats *proto.MatchStats) app.ResultStats {
 	s := app.ResultStats{}
 
 	if stats.GetHomeScore() != nil {
 		s.HomeScore = uint8(stats.GetHomeScore().GetValue())
 	}
 
-	if stats.GetHomeScore() != nil {
-		s.HomeScore = uint8(stats.GetHomeScore().GetValue())
+	if stats.GetAwayScore() != nil {
+		s.AwayScore = uint8(stats.GetAwayScore().GetValue())
 	}
 
-	return &s
+	return s
 }
 
-func convertRound(round *proto.Round) (*app.Round, error) {
+func convertRound(round *proto.Round) (app.Round, error) {
 	start, err := time.Parse(time.RFC3339, round.GetStartDate())
 
 	if err != nil {
-		return nil, err
+		return app.Round{}, err
 	}
 
 	end, err := time.Parse(time.RFC3339, round.GetEndDate())
 
 	if err != nil {
-		return nil, err
+		return app.Round{}, err
 	}
 
 	r := app.Round{
@@ -72,10 +68,10 @@ func convertRound(round *proto.Round) (*app.Round, error) {
 		EndDate:   app.JsonDate(end),
 	}
 
-	return &r, nil
+	return r, nil
 }
 
-func convertSeason(season *proto.Season) *app.Season {
+func convertSeason(season *proto.Season) app.Season {
 	s := app.Season{
 		ID:        season.GetId(),
 		Name:      season.GetName(),
@@ -85,10 +81,10 @@ func convertSeason(season *proto.Season) *app.Season {
 		s.IsCurrent = season.GetIsCurrent().GetValue()
 	}
 
-	return &s
+	return s
 }
 
-func convertTeam(team *proto.Team) *app.Team {
+func convertTeam(team *proto.Team) app.Team {
 	t := app.Team{
 		ID:        team.GetId(),
 		Name:      team.GetName(),
@@ -112,11 +108,11 @@ func convertTeam(team *proto.Team) *app.Team {
 		t.Logo = &team.GetLogo().Value
 	}
 
-	return &t
+	return t
 }
 
-func convertVenue(venue *proto.Venue) *app.Venue {
-	return &app.Venue{
+func convertVenue(venue *proto.Venue) app.Venue {
+	return app.Venue{
 		ID:   venue.GetId(),
 		Name: venue.GetName(),
 	}
