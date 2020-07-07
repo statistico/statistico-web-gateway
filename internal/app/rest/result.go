@@ -15,7 +15,7 @@ type ResultHandler struct {
 	composer composer.ResultComposer
 }
 
-func(h *ResultHandler) ByTeam(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (h *ResultHandler) ByTeam(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	param := ps.ByName("id")
 	id, err := strconv.Atoi(param)
 

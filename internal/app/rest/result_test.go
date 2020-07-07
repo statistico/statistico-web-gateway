@@ -92,8 +92,8 @@ func TestResultHandler_ByTeam(t *testing.T) {
 		venue := "home"
 
 		filters := composer.Filters{
-			Sort:       &sort,
-			Venue:      &venue,
+			Sort:  &sort,
+			Venue: &venue,
 		}
 
 		c.On("ForTeam", uint64(33), &filters).Return(results(), nil)
@@ -130,7 +130,7 @@ func TestResultHandler_ByTeam(t *testing.T) {
 			},
 		}
 
-		c.AssertNotCalled(t,"ForTeam", uint64(33), &composer.Filters{})
+		c.AssertNotCalled(t, "ForTeam", uint64(33), &composer.Filters{})
 
 		handler.ByTeam(res, req, params)
 
@@ -165,8 +165,8 @@ func TestResultHandler_ByTeam(t *testing.T) {
 		venue := "home"
 
 		filters := composer.Filters{
-			Sort:       &sort,
-			Venue:      &venue,
+			Sort:  &sort,
+			Venue: &venue,
 		}
 
 		c.On("ForTeam", uint64(33), &filters).Return([]*app.Result{}, e.ErrorInternalServerError)
@@ -204,8 +204,8 @@ func TestResultHandler_ByTeam(t *testing.T) {
 		venue := "home"
 
 		filters := composer.Filters{
-			Sort:       &sort,
-			Venue:      &venue,
+			Sort:  &sort,
+			Venue: &venue,
 		}
 
 		c.On("ForTeam", uint64(33), &filters).Return([]*app.Result{}, e.ErrorBadGateway)
@@ -243,8 +243,8 @@ func TestResultHandler_ByTeam(t *testing.T) {
 		venue := "home"
 
 		filters := composer.Filters{
-			Sort:       &sort,
-			Venue:      &venue,
+			Sort:  &sort,
+			Venue: &venue,
 		}
 
 		c.On("ForTeam", uint64(33), &filters).Return([]*app.Result{}, errors.New("validation error"))
@@ -263,22 +263,22 @@ func results() []*app.Result {
 	var results []*app.Result
 
 	home := app.Team{
-		ID:             1,
-		Name:           "West Ham United",
-		CountryID:      8,
-		VenueID:        214,
+		ID:        1,
+		Name:      "West Ham United",
+		CountryID: 8,
+		VenueID:   214,
 	}
 
 	away := app.Team{
-		ID:             10,
-		Name:           "Nottingham Forest",
-		CountryID:      8,
-		VenueID:        300,
+		ID:        10,
+		Name:      "Nottingham Forest",
+		CountryID: 8,
+		VenueID:   300,
 	}
 
 	season := app.Season{
-		ID:        16036,
-		Name:      "2019/2020",
+		ID:   16036,
+		Name: "2019/2020",
 	}
 
 	start, _ := time.Parse(time.RFC3339, "2020-07-07T12:00:00+00:00")
@@ -298,8 +298,8 @@ func results() []*app.Result {
 	}
 
 	stats := app.ResultStats{
-		HomeScore:    5,
-		AwayScore:    2,
+		HomeScore: 5,
+		AwayScore: 2,
 	}
 
 	date, _ := time.Parse(time.RFC3339, "2020-07-07T15:00:00+00:00")

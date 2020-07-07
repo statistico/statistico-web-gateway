@@ -7,8 +7,8 @@ import (
 )
 
 type Container struct {
-	Config                      *Config
-	Logger                      *logrus.Logger
+	Config                          *Config
+	Logger                          *logrus.Logger
 	StatisticoDataServiceConnection *grpc.ClientConn
 }
 

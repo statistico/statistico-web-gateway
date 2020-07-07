@@ -73,8 +73,8 @@ func convertRound(round *proto.Round) (app.Round, error) {
 
 func convertSeason(season *proto.Season) app.Season {
 	s := app.Season{
-		ID:        season.GetId(),
-		Name:      season.GetName(),
+		ID:   season.GetId(),
+		Name: season.GetName(),
 	}
 
 	if season.GetIsCurrent() != nil {
