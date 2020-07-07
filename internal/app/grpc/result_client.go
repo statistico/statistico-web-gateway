@@ -37,7 +37,6 @@ func (r resultClient) ByTeam(ctx context.Context, req *proto.TeamResultRequest) 
 				r.logError(err)
 				return results, errors.ErrorBadGateway
 			}
-
 		}
 	}
 
