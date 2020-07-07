@@ -58,22 +58,22 @@ func TestConverter(t *testing.T) {
 		t.Helper()
 
 		home := proto.Team{
-			Id:             1,
-			Name:           "West Ham United",
-			CountryId:      8,
-			VenueId:        214,
+			Id:        1,
+			Name:      "West Ham United",
+			CountryId: 8,
+			VenueId:   214,
 		}
 
 		away := proto.Team{
-			Id:             10,
-			Name:           "Nottingham Forest",
-			CountryId:      8,
-			VenueId:        300,
+			Id:        10,
+			Name:      "Nottingham Forest",
+			CountryId: 8,
+			VenueId:   300,
 		}
 
 		season := proto.Season{
-			Id:        16036,
-			Name:      "2019/2020",
+			Id:   16036,
+			Name: "2019/2020",
 		}
 
 		round := proto.Round{
@@ -88,7 +88,6 @@ func TestConverter(t *testing.T) {
 			Id:   214,
 			Name: "London Stadium",
 		}
-
 
 		date := proto.Date{
 			Utc: 1594132077,
@@ -211,15 +210,14 @@ func newProtoResult() *proto.Result {
 		Name: "London Stadium",
 	}
 
-
 	date := proto.Date{
 		Utc: 1594132077,
 		Rfc: "2020-07-07T15:00:00+00:00",
 	}
 
 	stats := proto.MatchStats{
-		HomeScore:          &wrappers.UInt32Value{Value: 5},
-		AwayScore:          &wrappers.UInt32Value{Value: 2},
+		HomeScore: &wrappers.UInt32Value{Value: 5},
+		AwayScore: &wrappers.UInt32Value{Value: 2},
 	}
 
 	return &proto.Result{

@@ -28,8 +28,8 @@ func TestResultClient_ByTeam(t *testing.T) {
 		stream := new(mock.ResultStream)
 
 		request := proto.TeamResultRequest{
-			TeamId:     1,
-			Limit:      &wrappers.UInt64Value{Value: 8},
+			TeamId: 1,
+			Limit:  &wrappers.UInt64Value{Value: 8},
 		}
 
 		ctx := context.Background()
@@ -59,8 +59,8 @@ func TestResultClient_ByTeam(t *testing.T) {
 		stream := new(mock.ResultStream)
 
 		request := proto.TeamResultRequest{
-			TeamId:     1,
-			Limit:      &wrappers.UInt64Value{Value: 8},
+			TeamId: 1,
+			Limit:  &wrappers.UInt64Value{Value: 8},
 		}
 
 		ctx := context.Background()
@@ -90,8 +90,8 @@ func TestResultClient_ByTeam(t *testing.T) {
 		stream := new(mock.ResultStream)
 
 		request := proto.TeamResultRequest{
-			TeamId:     1,
-			Limit:      &wrappers.UInt64Value{Value: 8},
+			TeamId: 1,
+			Limit:  &wrappers.UInt64Value{Value: 8},
 		}
 
 		ctx := context.Background()
@@ -122,8 +122,8 @@ func TestResultClient_ByTeam(t *testing.T) {
 		stream := new(mock.ResultStream)
 
 		request := proto.TeamResultRequest{
-			TeamId:     1,
-			Limit:      &wrappers.UInt64Value{Value: 8},
+			TeamId: 1,
+			Limit:  &wrappers.UInt64Value{Value: 8},
 		}
 
 		ctx := context.Background()
@@ -154,8 +154,8 @@ func TestResultClient_ByTeam(t *testing.T) {
 		stream := new(mock.ResultStream)
 
 		request := proto.TeamResultRequest{
-			TeamId:     1,
-			Limit:      &wrappers.UInt64Value{Value: 8},
+			TeamId: 1,
+			Limit:  &wrappers.UInt64Value{Value: 8},
 		}
 
 		ctx := context.Background()
@@ -221,15 +221,14 @@ func newProtoResult() *proto.Result {
 		Name: "London Stadium",
 	}
 
-
 	date := proto.Date{
 		Utc: 1594132077,
 		Rfc: "2020-07-07T15:00:00+00:00",
 	}
 
 	stats := proto.MatchStats{
-		HomeScore:          &wrappers.UInt32Value{Value: 5},
-		AwayScore:          &wrappers.UInt32Value{Value: 2},
+		HomeScore: &wrappers.UInt32Value{Value: 5},
+		AwayScore: &wrappers.UInt32Value{Value: 2},
 	}
 
 	return &proto.Result{

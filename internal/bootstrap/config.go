@@ -7,8 +7,8 @@ type Config struct {
 }
 
 type StatisticoDataService struct {
-	Host    string
-	Port    string
+	Host string
+	Port string
 }
 
 func BuildConfig() *Config {
