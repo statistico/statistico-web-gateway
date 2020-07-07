@@ -2,7 +2,6 @@ package bootstrap
 
 import (
 	"github.com/sirupsen/logrus"
-	"github.com/statistico/statistico-web-gateway/internal/app/grpc/proto"
 	"google.golang.org/grpc"
 	"os"
 )
@@ -10,14 +9,14 @@ import (
 type Container struct {
 	Config                      *Config
 	Logger                      *logrus.Logger
-	StatisticoDataServiceClient proto.TeamServiceClient
+	StatisticoDataServiceConnection *grpc.ClientConn
 }
 
 func BuildContainer(config *Config) *Container {
 	c := Container{Config: config}
 
 	c.Logger = logger()
-	c.StatisticoDataServiceClient = statisticoDataServiceClient(config)
+	c.StatisticoDataServiceConnection = statisticoDataServiceConnection(config)
 
 	return &c
 }
@@ -29,7 +28,7 @@ func logger() *logrus.Logger {
 	return logger
 }
 
-func statisticoDataServiceClient(config *Config) proto.TeamServiceClient {
+func statisticoDataServiceConnection(config *Config) *grpc.ClientConn {
 	address := config.StatisticoDataService.Host + ":" + config.StatisticoDataService.Port
 
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
@@ -38,5 +37,5 @@ func statisticoDataServiceClient(config *Config) proto.TeamServiceClient {
 		logger().Warnf("Error initializing statistico data service grpc client %s", err.Error())
 	}
 
-	return proto.NewTeamServiceClient(conn)
+	return conn
 }
