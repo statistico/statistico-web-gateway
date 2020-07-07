@@ -38,30 +38,7 @@ func (t teamClient) TeamById(ctx context.Context, req *proto.TeamRequest) (*app.
 		return nil, errors.ErrorInternalServerError
 	}
 
-	team := app.Team{
-		ID:        response.GetId(),
-		Name:      response.GetName(),
-		CountryID: response.GetCountryId(),
-		VenueID:   response.GetVenueId(),
-	}
-
-	if response.GetShortCode() != nil {
-		team.ShortCode = &response.GetShortCode().Value
-	}
-
-	if response.GetIsNationalTeam() != nil {
-		team.NationalTeam = response.GetIsNationalTeam().Value
-	}
-
-	if response.GetFounded() != nil {
-		team.Founded = &response.GetFounded().Value
-	}
-
-	if response.GetLogo() != nil {
-		team.Logo = &response.GetLogo().Value
-	}
-
-	return &team, nil
+	return convertTeam(response), nil
 }
 
 func (t teamClient) logError(err error) {

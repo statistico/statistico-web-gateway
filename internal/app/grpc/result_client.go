@@ -3,14 +3,16 @@ package grpc
 import (
 	"context"
 	"github.com/sirupsen/logrus"
+	"github.com/statistico/statistico-web-gateway/internal/app"
 	"github.com/statistico/statistico-web-gateway/internal/app/errors"
 	"github.com/statistico/statistico-web-gateway/internal/app/grpc/proto"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"io"
 )
 
 type ResultClient interface {
-	ByTeam(ctx context.Context, req *proto.TeamResultRequest) ([]proto.Result, error)
+	ByTeam(ctx context.Context, req *proto.TeamResultRequest) ([]*app.Result, error)
 }
 
 type resultClient struct {
@@ -18,34 +20,56 @@ type resultClient struct {
 	logger *logrus.Logger
 }
 
-func (r resultClient) ByTeam(ctx context.Context, req *proto.TeamResultRequest) ([]proto.Result, error) {
-	response, err := r.client.GetResultsForTeam(ctx, req)
+func (r resultClient) ByTeam(ctx context.Context, req *proto.TeamResultRequest) ([]*app.Result, error) {
+	var results []*app.Result
 
-	var res []proto.Result
+	stream, err := r.client.GetResultsForTeam(ctx, req)
 
 	if err != nil {
 		if e, ok := status.FromError(err); ok {
 			switch e.Code() {
 			case codes.InvalidArgument:
-				return res, err
+				return results, err
 			case codes.Internal:
 				r.logError(err)
-				return res, errors.ErrorInternalServerError
+				return results, errors.ErrorInternalServerError
 			default:
 				r.logError(err)
-				return res, errors.ErrorBadGateway
+				return results, errors.ErrorBadGateway
 			}
 
 		}
 	}
 
-	for _, result := range response {
+	for {
+		result, err := stream.Recv()
 
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			r.logError(err)
+			return results, errors.ErrorInternalServerError
+		}
+
+		res, err := convertResult(result)
+
+		if err != nil {
+			r.logError(err)
+			return results, errors.ErrorInternalServerError
+		}
+
+		results = append(results, res)
 	}
 
-	return res, nil
+	return results, nil
 }
 
 func (r resultClient) logError(err error) {
 	r.logger.Errorf("Error in result client %s", err.Error())
+}
+
+func NewResultClient(p proto.ResultServiceClient, l *logrus.Logger) ResultClient {
+	return resultClient{client: p, logger: l}
 }

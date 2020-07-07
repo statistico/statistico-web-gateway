@@ -8,7 +8,7 @@ type Result struct {
 	Round    Round   `json:"round"`
 	Venue    Venue   `json:"venue"`
 	DateTime JsonDate `json:"date"`
-	Stats    ResultStats `json:"stats"`
+	Stats    *ResultStats `json:"stats"`
 }
 
 type ResultStats struct {
