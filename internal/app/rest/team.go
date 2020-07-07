@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
+	"github.com/statistico/statistico-web-gateway/internal/app"
 	"github.com/statistico/statistico-web-gateway/internal/app/composer"
 	e "github.com/statistico/statistico-web-gateway/internal/app/errors"
 	"net/http"
@@ -35,11 +36,21 @@ func (t *TeamHandler) TeamById(w http.ResponseWriter, _ *http.Request, ps httpro
 		return
 	}
 
-	successResponse(w, http.StatusOK, team)
+	teamResponse(w, team)
 }
 
 func NewTeamHandler(c composer.TeamComposer) *TeamHandler {
 	return &TeamHandler{c}
+}
+
+func teamResponse(w http.ResponseWriter, team *app.Team) {
+	payload := struct {
+		Team *app.Team `json:"team"`
+	}{}
+
+	payload.Team = team
+
+	successResponse(w, http.StatusOK, payload)
 }
 
 func notFoundResponse(w http.ResponseWriter, id string) {

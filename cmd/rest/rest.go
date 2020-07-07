@@ -15,7 +15,7 @@ func main() {
 	router.GET("/", rest.RoutePath)
 	router.GET("/healthcheck", rest.HealthCheck)
 	router.GET("/openapi.json", rest.RenderApiDocs)
-	
+
 	router.GET("/team/:id", container.RestTeamHandler().TeamById)
 	router.GET("/team/:id/results", container.RestResultHandler().ByTeam)
 

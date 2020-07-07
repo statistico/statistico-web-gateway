@@ -79,7 +79,10 @@ paths:
                 type: object
                 properties:
                   data:
-                    $ref: '#/components/schemas/Team'
+                    type: object
+                    properties:
+                      team:
+                        $ref: '#/components/schemas/Team'
         default:
           description: Default non 200 response
           content:
