@@ -36,10 +36,6 @@ func (r resultComposer) ForTeam(teamId uint64, filters *Filters) ([]*app.Result,
 		request.Venue = &wrappers.StringValue{Value: *filters.Venue}
 	}
 
-	if len(filters.SeasonIDs) > 0 {
-		request.SeasonIds = filters.SeasonIDs
-	}
-
 	if filters.Sort != nil {
 		request.Sort = &wrappers.StringValue{Value: *filters.Sort}
 	}
