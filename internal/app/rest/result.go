@@ -1,37 +1,33 @@
 package rest
 
 import (
+	"encoding/json"
 	"errors"
-	"github.com/gorilla/schema"
+	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"github.com/statistico/statistico-web-gateway/internal/app"
 	"github.com/statistico/statistico-web-gateway/internal/app/composer"
 	e "github.com/statistico/statistico-web-gateway/internal/app/errors"
 	"net/http"
-	"strconv"
 )
 
 type ResultHandler struct {
 	composer composer.ResultComposer
 }
 
-func (h *ResultHandler) ByTeam(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	param := ps.ByName("id")
-	id, err := strconv.Atoi(param)
-
-	if err != nil {
-		failResponse(w, http.StatusBadRequest, err)
-		return
-	}
-
+func (h *ResultHandler) Fetch(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	filters := composer.Filters{}
 
-	if err := schema.NewDecoder().Decode(&filters, r.URL.Query()); err != nil {
-		failResponse(w, http.StatusUnprocessableEntity, errors.New("error parsing query parameters"))
+	if err := json.NewDecoder(r.Body).Decode(&filters); err != nil {
+		failResponse(
+			w,
+			http.StatusUnprocessableEntity,
+			fmt.Errorf("error parsing request body: %s", err.Error()),
+		)
 		return
 	}
 
-	results, err := h.composer.ForTeam(uint64(id), &filters)
+	results, err := h.composer.FetchResults(&filters)
 
 	if err != nil {
 		if err == e.ErrorInternalServerError {
