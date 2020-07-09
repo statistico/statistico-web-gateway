@@ -17,7 +17,7 @@ func main() {
 	router.GET("/openapi.json", rest.RenderApiDocs)
 	
 	router.GET("/team/:id", container.RestTeamHandler().TeamById)
-	router.GET("/team/:id/results", container.RestResultHandler().ByTeam)
+	router.POST("/result-search", container.RestResultHandler().Fetch)
 
 	log.Fatal(http.ListenAndServe(":80", router))
 }

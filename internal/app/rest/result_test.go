@@ -1,6 +1,7 @@
 package rest_test
 
 import (
+	"bytes"
 	"errors"
 	"github.com/julienschmidt/httprouter"
 	"github.com/statistico/statistico-web-gateway/internal/app"
@@ -22,23 +23,12 @@ func TestResultHandler_ByTeam(t *testing.T) {
 		c := new(mock.ResultComposer)
 		handler := rest.NewResultHandler(c)
 
-		req := httptest.NewRequest(http.MethodGet, "/team/32/results", nil)
-		q := req.URL.Query()
-		q.Add("dateBefore", "2020-01-01T00:00:00+00:00")
-		q.Add("dateAfter", "2020-01-01T12:00:00+00:00")
-		q.Add("limit", "10")
-		q.Add("sort", "date_desc")
-		q.Add("venue", "home")
-		req.URL.RawQuery = q.Encode()
-
+		body := []byte(`{"dateBefore":"2020-01-01T00:00:00+00:00","dateAfter":"2020-01-01T12:00:00+00:00","limit":10,
+			"sort":"date_desc","team":{"id":33,"venue":"home"},"seasonIds":[16036,12968]}`)
+		req := httptest.NewRequest(http.MethodPost, "/result-search", bytes.NewBuffer(body))
 		res := httptest.NewRecorder()
-		params := httprouter.Params{
-			httprouter.Param{
-				Key:   "id",
-				Value: "33",
-			},
-		}
 
+		seasonIds := []uint64{16036, 12968}
 		limit := uint64(10)
 		sort := "date_desc"
 		venue := "home"
@@ -49,13 +39,17 @@ func TestResultHandler_ByTeam(t *testing.T) {
 			Limit:      &limit,
 			DateBefore: &before,
 			DateAfter:  &after,
+			SeasonIds:  &seasonIds,
 			Sort:       &sort,
-			Venue:      &venue,
+			Team: &composer.TeamFilter{
+				ID:    33,
+				Venue: &venue,
+			},
 		}
 
-		c.On("ForTeam", uint64(33), &filters).Return(results(), nil)
+		c.On("FetchResults", &filters).Return(results(), nil)
 
-		handler.ByTeam(res, req, params)
+		handler.Fetch(res, req, httprouter.Params{})
 
 		expected := `{"status":"success","data":{"results":[{"id":78102,"homeTeam":{"id":1,"name":"West Ham United","shortCode":null,` +
 			`"countryId":8,"venueId":214,"nationalTeam":false,"founded":null,"logo":null},"awayTeam":{"id":10,"name":"Nottingham Forest",` +
@@ -68,37 +62,26 @@ func TestResultHandler_ByTeam(t *testing.T) {
 		c.AssertExpectations(t)
 	})
 
-	t.Run("returns a 200 response handling less query parameters", func(t *testing.T) {
+	t.Run("returns a 200 response handling less request body parameters", func(t *testing.T) {
 		t.Helper()
 
 		c := new(mock.ResultComposer)
 		handler := rest.NewResultHandler(c)
 
-		req := httptest.NewRequest(http.MethodGet, "/team/32/results", nil)
-		q := req.URL.Query()
-		q.Add("sort", "date_desc")
-		q.Add("venue", "home")
-		req.URL.RawQuery = q.Encode()
-
+		body := []byte(`{"sort":"date_desc","team":{"id":1}}`)
+		req := httptest.NewRequest(http.MethodPost, "/result-search", bytes.NewBuffer(body))
 		res := httptest.NewRecorder()
-		params := httprouter.Params{
-			httprouter.Param{
-				Key:   "id",
-				Value: "33",
-			},
-		}
 
 		sort := "date_desc"
-		venue := "home"
 
 		filters := composer.Filters{
-			Sort:  &sort,
-			Venue: &venue,
+			Sort: &sort,
+			Team: &composer.TeamFilter{ID: 1},
 		}
 
-		c.On("ForTeam", uint64(33), &filters).Return(results(), nil)
+		c.On("FetchResults", &filters).Return(results(), nil)
 
-		handler.ByTeam(res, req, params)
+		handler.Fetch(res, req, httprouter.Params{})
 
 		expected := `{"status":"success","data":{"results":[{"id":78102,"homeTeam":{"id":1,"name":"West Ham United","shortCode":null,` +
 			`"countryId":8,"venueId":214,"nationalTeam":false,"founded":null,"logo":null},"awayTeam":{"id":10,"name":"Nottingham Forest",` +
@@ -111,30 +94,28 @@ func TestResultHandler_ByTeam(t *testing.T) {
 		c.AssertExpectations(t)
 	})
 
-	t.Run("returns a 422 response if error parsing query parameter schema", func(t *testing.T) {
+	t.Run("returns a 400 response if error parsing request body", func(t *testing.T) {
 		t.Helper()
 
 		c := new(mock.ResultComposer)
 		handler := rest.NewResultHandler(c)
 
-		req := httptest.NewRequest(http.MethodGet, "/team/32/results", nil)
-		q := req.URL.Query()
-		q.Add("sorted", "date_desc")
-		req.URL.RawQuery = q.Encode()
-
+		body := []byte(`{"sort":10,"team":{"id":1}`)
+		req := httptest.NewRequest(http.MethodPost, "/result-search", bytes.NewBuffer(body))
 		res := httptest.NewRecorder()
-		params := httprouter.Params{
-			httprouter.Param{
-				Key:   "id",
-				Value: "33",
-			},
+
+		sort := "date_desc"
+
+		filters := composer.Filters{
+			Sort: &sort,
+			Team: &composer.TeamFilter{ID: 1},
 		}
 
-		c.AssertNotCalled(t, "ForTeam", uint64(33), &composer.Filters{})
+		c.AssertNotCalled(t, "FetchResults", &filters)
 
-		handler.ByTeam(res, req, params)
+		handler.Fetch(res, req, httprouter.Params{})
 
-		expected := `{"status":"fail","data":[{"message":"error parsing query parameters","code":1}]}`
+		expected := `{"status":"fail","data":[{"message":"error parsing request body: unexpected EOF","code":1}]}`
 
 		assert.Equal(t, http.StatusUnprocessableEntity, res.Code)
 		assert.Equal(t, expected, res.Body.String())
@@ -147,31 +128,20 @@ func TestResultHandler_ByTeam(t *testing.T) {
 		c := new(mock.ResultComposer)
 		handler := rest.NewResultHandler(c)
 
-		req := httptest.NewRequest(http.MethodGet, "/team/32/results", nil)
-		q := req.URL.Query()
-		q.Add("sort", "date_desc")
-		q.Add("venue", "home")
-		req.URL.RawQuery = q.Encode()
-
+		body := []byte(`{"sort":"date_desc","team":{"id":1}}`)
+		req := httptest.NewRequest(http.MethodPost, "/result-search", bytes.NewBuffer(body))
 		res := httptest.NewRecorder()
-		params := httprouter.Params{
-			httprouter.Param{
-				Key:   "id",
-				Value: "33",
-			},
-		}
 
 		sort := "date_desc"
-		venue := "home"
 
 		filters := composer.Filters{
-			Sort:  &sort,
-			Venue: &venue,
+			Sort: &sort,
+			Team: &composer.TeamFilter{ID: 1},
 		}
 
-		c.On("ForTeam", uint64(33), &filters).Return([]*app.Result{}, e.ErrorInternalServerError)
+		c.On("FetchResults", &filters).Return([]*app.Result{}, e.ErrorInternalServerError)
 
-		handler.ByTeam(res, req, params)
+		handler.Fetch(res, req, httprouter.Params{})
 
 		expected := `{"status":"error","data":[{"message":"internal server error","code":1}]}`
 
@@ -186,31 +156,20 @@ func TestResultHandler_ByTeam(t *testing.T) {
 		c := new(mock.ResultComposer)
 		handler := rest.NewResultHandler(c)
 
-		req := httptest.NewRequest(http.MethodGet, "/team/32/results", nil)
-		q := req.URL.Query()
-		q.Add("sort", "date_desc")
-		q.Add("venue", "home")
-		req.URL.RawQuery = q.Encode()
-
+		body := []byte(`{"sort":"date_desc","team":{"id":1}}`)
+		req := httptest.NewRequest(http.MethodPost, "/result-search", bytes.NewBuffer(body))
 		res := httptest.NewRecorder()
-		params := httprouter.Params{
-			httprouter.Param{
-				Key:   "id",
-				Value: "33",
-			},
-		}
 
 		sort := "date_desc"
-		venue := "home"
 
 		filters := composer.Filters{
-			Sort:  &sort,
-			Venue: &venue,
+			Sort: &sort,
+			Team: &composer.TeamFilter{ID: 1},
 		}
 
-		c.On("ForTeam", uint64(33), &filters).Return([]*app.Result{}, e.ErrorBadGateway)
+		c.On("FetchResults", &filters).Return([]*app.Result{}, e.ErrorBadGateway)
 
-		handler.ByTeam(res, req, params)
+		handler.Fetch(res, req, httprouter.Params{})
 
 		expected := `{"status":"error","data":[{"message":"bad gateway","code":1}]}`
 
@@ -225,31 +184,20 @@ func TestResultHandler_ByTeam(t *testing.T) {
 		c := new(mock.ResultComposer)
 		handler := rest.NewResultHandler(c)
 
-		req := httptest.NewRequest(http.MethodGet, "/team/32/results", nil)
-		q := req.URL.Query()
-		q.Add("sort", "date_desc")
-		q.Add("venue", "home")
-		req.URL.RawQuery = q.Encode()
-
+		body := []byte(`{"sort":"date_desc","team":{"id":1}}`)
+		req := httptest.NewRequest(http.MethodPost, "/result-search", bytes.NewBuffer(body))
 		res := httptest.NewRecorder()
-		params := httprouter.Params{
-			httprouter.Param{
-				Key:   "id",
-				Value: "33",
-			},
-		}
 
 		sort := "date_desc"
-		venue := "home"
 
 		filters := composer.Filters{
-			Sort:  &sort,
-			Venue: &venue,
+			Sort: &sort,
+			Team: &composer.TeamFilter{ID: 1},
 		}
 
-		c.On("ForTeam", uint64(33), &filters).Return([]*app.Result{}, errors.New("validation error"))
+		c.On("FetchResults", &filters).Return([]*app.Result{}, errors.New("validation error"))
 
-		handler.ByTeam(res, req, params)
+		handler.Fetch(res, req, httprouter.Params{})
 
 		expected := `{"status":"fail","data":[{"message":"validation error","code":1}]}`
 

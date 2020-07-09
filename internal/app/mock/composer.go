@@ -19,7 +19,7 @@ type ResultComposer struct {
 	mock.Mock
 }
 
-func (r *ResultComposer) ForTeam(teamId uint64, filters *composer.Filters) ([]*app.Result, error) {
-	args := r.Called(teamId, filters)
+func (r *ResultComposer) FetchResults(filters *composer.Filters) ([]*app.Result, error) {
+	args := r.Called(filters)
 	return args.Get(0).([]*app.Result), args.Error(1)
 }
