@@ -142,56 +142,30 @@
         }
       }
     },
-    "/team/{id}/result-search": {
+    "/result-search": {
       "post": {
         "tags": [
           "Team"
         ],
-        "description": "Get result resources for a team",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "The id of the team resource",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": 1
-            }
-          }
-        ],
+        "description": "Get result resources",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
+                "type": "object",
                 "properties": {
-                  "dateRange": {
-                    "type": "object",
-                    "nullable": true,
-                    "properties": {
-                      "from": {
-                        "$ref": "#/components/schemas/DateRFC3339"
-                      },
-                      "to": {
-                        "$ref": "#/components/schemas/DateRFC3339"
-                      }
-                    }
+                  "dateBefore": {
+                    "$ref": "#/components/schemas/DateRFC3339",
+                    "nullable": true
+                  },
+                  "dateAfter": {
+                    "$ref": "#/components/schemas/DateRFC3339",
+                    "nullable": true
                   },
                   "limit": {
                     "type": "integer",
                     "example": 10,
                     "nullable": true
-                  },
-                  "seasonIds": {
-                    "type": "array",
-                    "nullable": true,
-                    "items": {
-                      "type": "integer"
-                    },
-                    "example": [
-                      16203,
-                      340
-                    ]
                   },
                   "sort": {
                     "type": "string",
@@ -201,13 +175,30 @@
                     ],
                     "nullable": true
                   },
-                  "venue": {
-                    "type": "string",
-                    "enum": [
-                      "home",
-                      "away"
+                  "seasonIds": {
+                    "type": "array",
+                    "example": [
+                      16036,
+                      12963
                     ],
                     "nullable": true
+                  },
+                  "team": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "example": 56
+                      },
+                      "venue": {
+                        "type": "string",
+                        "enum": [
+                          "home",
+                          "away"
+                        ],
+                        "nullable": true
+                      }
+                    }
                   }
                 }
               }
@@ -397,6 +388,12 @@
             "type": "integer",
             "example": 1720918
           },
+          "homeTeam": {
+            "$ref": "#/components/schemas/Team"
+          },
+          "awayTeam": {
+            "$ref": "#/components/schemas/Team"
+          },
           "season": {
             "$ref": "#/components/schemas/Season"
           },
@@ -406,30 +403,19 @@
           "venue": {
             "$ref": "#/components/schemas/Venue"
           },
-          "dateTime": {
+          "date": {
             "$ref": "#/components/schemas/DateRFC3339"
           },
-          "matchData": {
+          "stats": {
             "type": "object",
             "properties": {
-              "homeTeam": {
-                "$ref": "#/components/schemas/Team"
+              "homeScore": {
+                "type": "integer",
+                "example": 3
               },
-              "awayTeam": {
-                "$ref": "#/components/schemas/Team"
-              },
-              "stats": {
-                "type": "object",
-                "properties": {
-                  "homeScore": {
-                    "type": "integer",
-                    "example": 3
-                  },
-                  "awayScore": {
-                    "type": "integer",
-                    "example": 1
-                  }
-                }
+              "awayScore": {
+                "type": "integer",
+                "example": 1
               }
             }
           }
