@@ -21,7 +21,7 @@ type resultClient struct {
 }
 
 func (r resultClient) ByTeam(ctx context.Context, req *proto.TeamResultRequest) ([]*app.Result, error) {
-	var results []*app.Result
+	results := []*app.Result{}
 
 	stream, err := r.client.GetResultsForTeam(ctx, req)
 
