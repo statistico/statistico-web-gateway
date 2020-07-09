@@ -87,51 +87,49 @@ paths:
               schema:
                 $ref: '#/components/schemas/StandardResponse'
 
-  /team/{id}/results:
+  /result-search:
     post:
       tags:
         - Team
-      description: Get result resources for a team
-      parameters:
-        - name: id
-          in: path
-          description: The id of the team resource
-          required: true
-          schema:
-            type: string
-            example: 1
-        - name: dateAfter
-          in: query
-          description: Return results after given date
-          schema:
-            $ref: '#/components/schemas/DateRFC3339'
-        - name: dateBefore
-          in: query
-          description: Return results before given date
-          schema:
-              $ref: '#/components/schemas/DateRFC3339'
-        - name: limit
-          in: query
-          description: Limit the result set
-          schema:
-            type: integer
-            example: 10
-        - name: sort
-          in: query
-          description: Sort the result by in a specific order
-          schema:
-            type: string
-            enum:
-              - date_asc
-              - date_desc
-        - name: venue
-          in: query
-          description: Limit the result set based on venue match was played
-          schema:
-            type: string
-            enum:
-              - home
-              - away
+      description: Get result resources
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dateBefore:
+                  $ref: '#/components/schemas/DateRFC3339'
+                  nullable: true
+                dateAfter:
+                  $ref: '#/components/schemas/DateRFC3339'
+                  nullable: true
+                limit:
+                  type: integer
+                  example: 10
+                  nullable: true
+                sort:
+                  type: string
+                  enum:
+                    - date_asc
+                    - date_desc
+                  nullable: true
+                seasonIds:
+                  type: array
+                  example: [16036, 12963]
+                  nullable: true
+                team:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 56
+                    venue:
+                      type: string
+                      enum:
+                        - home
+                        - away
+                      nullable: true
       responses:
         200:
           description: A list of result resources
