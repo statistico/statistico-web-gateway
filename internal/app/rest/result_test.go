@@ -28,7 +28,7 @@ func TestResultHandler_ByTeam(t *testing.T) {
 		req := httptest.NewRequest(http.MethodPost, "/result-search", bytes.NewBuffer(body))
 		res := httptest.NewRecorder()
 
-		seasonIds := []uint64{16036,12968}
+		seasonIds := []uint64{16036, 12968}
 		limit := uint64(10)
 		sort := "date_desc"
 		venue := "home"
@@ -39,7 +39,7 @@ func TestResultHandler_ByTeam(t *testing.T) {
 			Limit:      &limit,
 			DateBefore: &before,
 			DateAfter:  &after,
-			SeasonIds: &seasonIds,
+			SeasonIds:  &seasonIds,
 			Sort:       &sort,
 			Team: &composer.TeamFilter{
 				ID:    33,
@@ -75,7 +75,7 @@ func TestResultHandler_ByTeam(t *testing.T) {
 		sort := "date_desc"
 
 		filters := composer.Filters{
-			Sort:  &sort,
+			Sort: &sort,
 			Team: &composer.TeamFilter{ID: 1},
 		}
 
@@ -107,7 +107,7 @@ func TestResultHandler_ByTeam(t *testing.T) {
 		sort := "date_desc"
 
 		filters := composer.Filters{
-			Sort:  &sort,
+			Sort: &sort,
 			Team: &composer.TeamFilter{ID: 1},
 		}
 
@@ -135,7 +135,7 @@ func TestResultHandler_ByTeam(t *testing.T) {
 		sort := "date_desc"
 
 		filters := composer.Filters{
-			Sort:  &sort,
+			Sort: &sort,
 			Team: &composer.TeamFilter{ID: 1},
 		}
 
@@ -163,7 +163,7 @@ func TestResultHandler_ByTeam(t *testing.T) {
 		sort := "date_desc"
 
 		filters := composer.Filters{
-			Sort:  &sort,
+			Sort: &sort,
 			Team: &composer.TeamFilter{ID: 1},
 		}
 
@@ -191,7 +191,7 @@ func TestResultHandler_ByTeam(t *testing.T) {
 		sort := "date_desc"
 
 		filters := composer.Filters{
-			Sort:  &sort,
+			Sort: &sort,
 			Team: &composer.TeamFilter{ID: 1},
 		}
 
