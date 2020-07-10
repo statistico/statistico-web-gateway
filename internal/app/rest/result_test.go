@@ -117,7 +117,7 @@ func TestResultHandler_ByTeam(t *testing.T) {
 
 		expected := `{"status":"fail","data":[{"message":"error parsing request body: unexpected EOF","code":1}]}`
 
-		assert.Equal(t, http.StatusUnprocessableEntity, res.Code)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
 		assert.Equal(t, expected, res.Body.String())
 		c.AssertExpectations(t)
 	})

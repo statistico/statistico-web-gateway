@@ -21,7 +21,7 @@ func (h *ResultHandler) Fetch(w http.ResponseWriter, r *http.Request, _ httprout
 	if err := json.NewDecoder(r.Body).Decode(&filters); err != nil {
 		failResponse(
 			w,
-			http.StatusUnprocessableEntity,
+			http.StatusBadRequest,
 			fmt.Errorf("error parsing request body: %s", err.Error()),
 		)
 		return
