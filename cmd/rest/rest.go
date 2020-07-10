@@ -20,7 +20,6 @@ func main() {
 			header.Set("Access-Control-Allow-Origin", "*")
 		}
 
-		// Adjust status code to 204
 		w.WriteHeader(http.StatusNoContent)
 	})
 
