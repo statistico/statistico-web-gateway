@@ -12,17 +12,7 @@ func main() {
 	container := bootstrap.BuildContainer(bootstrap.BuildConfig())
 
 	router := httprouter.New()
-
-	router.GlobalOPTIONS = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Header.Get("Access-Control-Request-Method") != "" {
-			header := w.Header()
-			header.Set("Access-Control-Allow-Methods", r.Header.Get("Allow"))
-			header.Set("Access-Control-Allow-Origin", "*")
-		}
-
-		w.WriteHeader(http.StatusNoContent)
-	})
-
+	
 	router.GET("/", rest.RoutePath)
 	router.GET("/healthcheck", rest.HealthCheck)
 	router.GET("/openapi.json", rest.RenderApiDocs)
@@ -30,5 +20,16 @@ func main() {
 	router.GET("/team/:id", container.RestTeamHandler().TeamById)
 	router.POST("/result-search", container.RestResultHandler().Fetch)
 
-	log.Fatal(http.ListenAndServe(":80", router))
+	log.Fatal(http.ListenAndServe(":80", &Server{router}))
+}
+
+type Server struct {
+	r *httprouter.Router
+}
+
+
+func (s *Server) ServeHTTP (w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
+	s.r.ServeHTTP(w, r)
 }
