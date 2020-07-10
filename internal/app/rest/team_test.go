@@ -46,8 +46,8 @@ func TestTeamHandler_TeamById(t *testing.T) {
 
 		handler.TeamById(res, req, params)
 
-		expected := `{"status":"success","data":{"id":241,"name":"Romford FC","shortCode":"RFC","countryId":8,"venueId":9182,` +
-			`"nationalTeam":false,"founded":1920,"logo":null}}`
+		expected := `{"status":"success","data":{"team":{"id":241,"name":"Romford FC","shortCode":"RFC","countryId":8,"venueId":9182,` +
+			`"nationalTeam":false,"founded":1920,"logo":null}}}`
 
 		assert.Equal(t, http.StatusOK, res.Code)
 		assert.Equal(t, expected, res.Body.String())
