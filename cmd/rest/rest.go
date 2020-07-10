@@ -12,6 +12,17 @@ func main() {
 	container := bootstrap.BuildContainer(bootstrap.BuildConfig())
 
 	router := httprouter.New()
+
+	router.GlobalOPTIONS = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Header.Get("Access-Control-Request-Method") != "" {
+			header := w.Header()
+			header.Set("Access-Control-Allow-Methods", r.Header.Get("Allow"))
+			header.Set("Access-Control-Allow-Origin", "*")
+		}
+
+		w.WriteHeader(http.StatusNoContent)
+	})
+
 	router.GET("/", rest.RoutePath)
 	router.GET("/healthcheck", rest.HealthCheck)
 	router.GET("/openapi.json", rest.RenderApiDocs)
