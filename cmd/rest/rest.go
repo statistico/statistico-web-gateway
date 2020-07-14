@@ -20,7 +20,10 @@ func main() {
 	router.GET("/team/:id", container.RestTeamHandler().TeamById)
 	router.POST("/result-search", container.RestResultHandler().Fetch)
 
-	server := rest.NewServer(router)
+	server := rest.MiddlewarePipe(
+		router,
+		rest.CorsMiddleware,
+	)
 
 	log.Fatal(http.ListenAndServe(":80", server))
 }
