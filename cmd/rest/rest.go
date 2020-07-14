@@ -20,16 +20,10 @@ func main() {
 	router.GET("/team/:id", container.RestTeamHandler().TeamById)
 	router.POST("/result-search", container.RestResultHandler().Fetch)
 
-	log.Fatal(http.ListenAndServe(":80", &Server{router}))
-}
+	server := rest.MiddlewarePipe(
+		router,
+		rest.CorsMiddleware,
+	)
 
-type Server struct {
-	r *httprouter.Router
-}
-
-
-func (s *Server) ServeHTTP (w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
-	s.r.ServeHTTP(w, r)
+	log.Fatal(http.ListenAndServe(":80", server))
 }
