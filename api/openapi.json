@@ -10,6 +10,159 @@
     }
   ],
   "paths": {
+    "/competition": {
+      "get": {
+        "tags": [
+          "Competition",
+          "In development"
+        ],
+        "description": "Get competition resources",
+        "parameters": [
+          {
+            "name": "countryId",
+            "in": "query",
+            "description": "Filter competition resources by associated countries",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort resources by ID",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id_asc",
+                "id_desc"
+              ]
+            }
+          },
+          {
+            "name": "isCup",
+            "in": "query",
+            "description": "Filter competition resources by is cup parameter",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "enum": [
+                true,
+                false
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The team resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "competitions": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Competition"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default non 200 response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/competition/{id}/seasons": {
+      "get": {
+        "tags": [
+          "Competition",
+          "In development"
+        ],
+        "description": "Get season resources associated to a competition resource",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The competition resource ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": 8
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort resources by ID",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "name_asc",
+                "name_desc"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The team resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "seasons": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Season"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default non 200 response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/fixture-search": {
       "post": {
         "tags": [
@@ -122,7 +275,68 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Team"
+                      "type": "object",
+                      "properties": {
+                        "team": {
+                          "$ref": "#/components/schemas/Team"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default non 200 response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/season/{id}/teams": {
+      "get": {
+        "tags": [
+          "Team",
+          "In development"
+        ],
+        "description": "Get team resources associated to a season resource",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The competition resource ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": 16036
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The team resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "teams": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Team"
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -177,6 +391,9 @@
                   },
                   "seasonIds": {
                     "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
                     "example": [
                       16036,
                       12963
@@ -259,6 +476,10 @@
           "isCup": {
             "type": "boolean",
             "example": false
+          },
+          "countryId": {
+            "type": "integer",
+            "example": 462
           }
         }
       },
