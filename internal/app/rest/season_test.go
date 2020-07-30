@@ -12,29 +12,29 @@ import (
 	"testing"
 )
 
-func TestCompetitionHandler_ByCountryId(t *testing.T) {
-	t.Run("returns a 200 response containing competitions data", func(t *testing.T) {
+func TestSeasonHandler_ByCompetitionId(t *testing.T) {
+	t.Run("returns a 200 response containing seasons data", func(t *testing.T) {
 		t.Helper()
 
 		c := new(mock.CompetitionComposer)
-		handler := rest.NewCompetitionHandler(c)
+		handler := rest.NewSeasonHandler(c)
 
-		req := httptest.NewRequest(http.MethodGet, "/country/462/competitions", nil)
+		req := httptest.NewRequest(http.MethodGet, "/competition/8/seasons", nil)
 		params := httprouter.Params{
 			httprouter.Param{
 				Key:   "id",
-				Value: "462",
+				Value: "8",
 			},
 		}
 
 		res := httptest.NewRecorder()
 
-		c.On("CompetitionsByCountryId", uint64(462)).Return(competitions(), nil)
+		c.On("CompetitionSeasons", uint64(8)).Return(seasons(), nil)
 
-		handler.ByCountryId(res, req, params)
+		handler.ByCompetitionId(res, req, params)
 
-		expected := `{"status":"success","data":{"competitions":[{"id":8,"name":"Premier League","isCup":false,"countryId":462},` +
-			`{"id":10,"name":"Championship","isCup":false,"countryId":462}]}}`
+		expected := `{"status":"success","data":{"seasons":[{"id":12968,"name":"2018/2019","isCurrent":false},` +
+			`{"id":16036,"name":"2019/2020","isCurrent":true}]}}`
 
 		assert.Equal(t, http.StatusOK, res.Code)
 		assert.Equal(t, expected, res.Body.String())
@@ -45,23 +45,23 @@ func TestCompetitionHandler_ByCountryId(t *testing.T) {
 		t.Helper()
 
 		c := new(mock.CompetitionComposer)
-		handler := rest.NewCompetitionHandler(c)
+		handler := rest.NewSeasonHandler(c)
 
-		req := httptest.NewRequest(http.MethodGet, "/country/462/competitions", nil)
+		req := httptest.NewRequest(http.MethodGet, "/competition/8/seasons", nil)
 		params := httprouter.Params{
 			httprouter.Param{
 				Key:   "id",
-				Value: "462",
+				Value: "8",
 			},
 		}
 
 		res := httptest.NewRecorder()
 
-		c.On("CompetitionsByCountryId", uint64(462)).Return([]*app.Competition{}, nil)
+		c.On("CompetitionSeasons", uint64(8)).Return([]*app.Season{}, nil)
 
-		handler.ByCountryId(res, req, params)
+		handler.ByCompetitionId(res, req, params)
 
-		expected := `{"status":"success","data":{"competitions":[]}}`
+		expected := `{"status":"success","data":{"seasons":[]}}`
 
 		assert.Equal(t, http.StatusOK, res.Code)
 		assert.Equal(t, expected, res.Body.String())
@@ -72,9 +72,9 @@ func TestCompetitionHandler_ByCountryId(t *testing.T) {
 		t.Helper()
 
 		c := new(mock.CompetitionComposer)
-		handler := rest.NewCompetitionHandler(c)
+		handler := rest.NewSeasonHandler(c)
 
-		req := httptest.NewRequest(http.MethodGet, "/country/462/competitions", nil)
+		req := httptest.NewRequest(http.MethodGet, "/competition/8/seasons", nil)
 		params := httprouter.Params{
 			httprouter.Param{
 				Key:   "id",
@@ -84,36 +84,36 @@ func TestCompetitionHandler_ByCountryId(t *testing.T) {
 
 		res := httptest.NewRecorder()
 
-		handler.ByCountryId(res, req, params)
+		handler.ByCompetitionId(res, req, params)
 
 		expected := `{"status":"fail","data":[{"message":"unable to parse ID parameter as correct schema","code":1}]}`
 
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 		assert.Equal(t, expected, res.Body.String())
-		c.AssertNotCalled(t, "CompetitionsByCountryId")
+		c.AssertNotCalled(t, "CompetitionSeasons")
 	})
 
 	t.Run("returns a 500 response if internal server error returned by composer", func(t *testing.T) {
 		t.Helper()
 
 		c := new(mock.CompetitionComposer)
-		handler := rest.NewCompetitionHandler(c)
+		handler := rest.NewSeasonHandler(c)
 
-		req := httptest.NewRequest(http.MethodGet, "/country/462/competitions", nil)
+		req := httptest.NewRequest(http.MethodGet, "/competition/8/seasons", nil)
 		params := httprouter.Params{
 			httprouter.Param{
 				Key:   "id",
-				Value: "462",
+				Value: "8",
 			},
 		}
 
 		res := httptest.NewRecorder()
 
-		c.On("CompetitionsByCountryId", uint64(462)).Return([]*app.Competition{}, e.ErrorInternalServerError)
+		c.On("CompetitionSeasons", uint64(8)).Return([]*app.Season{}, e.ErrorInternalServerError)
+
+		handler.ByCompetitionId(res, req, params)
 
 		expected := `{"status":"error","data":[{"message":"internal server error","code":1}]}`
-
-		handler.ByCountryId(res, req, params)
 
 		assert.Equal(t, http.StatusInternalServerError, res.Code)
 		assert.Equal(t, expected, res.Body.String())
@@ -124,23 +124,23 @@ func TestCompetitionHandler_ByCountryId(t *testing.T) {
 		t.Helper()
 
 		c := new(mock.CompetitionComposer)
-		handler := rest.NewCompetitionHandler(c)
+		handler := rest.NewSeasonHandler(c)
 
-		req := httptest.NewRequest(http.MethodGet, "/country/462/competitions", nil)
+		req := httptest.NewRequest(http.MethodGet, "/competition/8/seasons", nil)
 		params := httprouter.Params{
 			httprouter.Param{
 				Key:   "id",
-				Value: "462",
+				Value: "8",
 			},
 		}
 
 		res := httptest.NewRecorder()
 
-		c.On("CompetitionsByCountryId", uint64(462)).Return([]*app.Competition{}, e.ErrorBadGateway)
+		c.On("CompetitionSeasons", uint64(8)).Return([]*app.Season{}, e.ErrorBadGateway)
+
+		handler.ByCompetitionId(res, req, params)
 
 		expected := `{"status":"error","data":[{"message":"bad gateway","code":1}]}`
-
-		handler.ByCountryId(res, req, params)
 
 		assert.Equal(t, http.StatusBadGateway, res.Code)
 		assert.Equal(t, expected, res.Body.String())
@@ -148,20 +148,18 @@ func TestCompetitionHandler_ByCountryId(t *testing.T) {
 	})
 }
 
-func competitions() []*app.Competition {
-	one := app.Competition{
-		ID:        8,
-		Name:      "Premier League",
-		IsCup:     false,
-		CountryID: 462,
+func seasons() []*app.Season {
+	one := app.Season{
+		ID:        12968,
+		Name:      "2018/2019",
+		IsCurrent: false,
 	}
 
-	two := app.Competition{
-		ID:        10,
-		Name:      "Championship",
-		IsCup:     false,
-		CountryID: 462,
+	two := app.Season{
+		ID:        16036,
+		Name:      "2019/2020",
+		IsCurrent: true,
 	}
 
-	return []*app.Competition{&one, &two}
+	return []*app.Season{&one, &two}
 }
