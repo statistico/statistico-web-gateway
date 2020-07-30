@@ -6,6 +6,15 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
+type CompetitionComposer struct {
+	mock.Mock
+}
+
+func (c *CompetitionComposer) CompetitionsByCountryId(countryId uint64) ([]*app.Competition, error) {
+	args := c.Called(countryId)
+	return args.Get(0).([]*app.Competition), args.Error(1)
+}
+
 type TeamComposer struct {
 	mock.Mock
 }

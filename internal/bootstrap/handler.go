@@ -2,6 +2,10 @@ package bootstrap
 
 import "github.com/statistico/statistico-web-gateway/internal/app/rest"
 
+func (c Container) RestCompetitionHandler() *rest.CompetitionHandler {
+	return rest.NewCompetitionHandler(c.CompetitionComposer())
+}
+
 func (c Container) RestResultHandler() *rest.ResultHandler {
 	return rest.NewResultHandler(c.ResultComposer())
 }
