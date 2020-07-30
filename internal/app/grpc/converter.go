@@ -85,10 +85,7 @@ func convertSeason(season *proto.Season) app.Season {
 	s := app.Season{
 		ID:   season.GetId(),
 		Name: season.GetName(),
-	}
-
-	if season.GetIsCurrent() != nil {
-		s.IsCurrent = season.GetIsCurrent().GetValue()
+		IsCurrent: season.GetIsCurrent().GetValue(),
 	}
 
 	return s

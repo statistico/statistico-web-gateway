@@ -39,6 +39,12 @@ message SeasonFixtureRequest {
   string date_to = 3;
 }
 
+message SeasonCompetitionRequest {
+  uint64 competition_id = 1;
+  // Order the name column to return seasons in specific order
+  google.protobuf.StringValue sort = 2;
+}
+
 message SeasonRequest {
   // The Season ID that the Result set relates to
   int64 season_id = 1;
