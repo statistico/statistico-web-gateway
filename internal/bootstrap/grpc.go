@@ -5,6 +5,11 @@ import (
 	"github.com/statistico/statistico-web-gateway/internal/app/grpc/proto"
 )
 
+func (c Container) GRPCCompetitionClient() grpc.CompetitionClient {
+	client := proto.NewCompetitionServiceClient(c.StatisticoDataServiceConnection)
+	return grpc.NewCompetitionClient(client, c.Logger)
+}
+
 func (c Container) GRPCResultClient() grpc.ResultClient {
 	client := proto.NewResultServiceClient(c.StatisticoDataServiceConnection)
 	return grpc.NewResultClient(client, c.Logger)
