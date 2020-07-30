@@ -6,8 +6,9 @@ import (
 )
 
 func (c Container) GRPCCompetitionClient() grpc.CompetitionClient {
-	client := proto.NewCompetitionServiceClient(c.StatisticoDataServiceConnection)
-	return grpc.NewCompetitionClient(client, c.Logger)
+	competitionClient := proto.NewCompetitionServiceClient(c.StatisticoDataServiceConnection)
+	seasonClient := proto.NewSeasonServiceClient(c.StatisticoDataServiceConnection)
+	return grpc.NewCompetitionClient(competitionClient, seasonClient, c.Logger)
 }
 
 func (c Container) GRPCResultClient() grpc.ResultClient {
