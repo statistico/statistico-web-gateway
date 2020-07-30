@@ -80,7 +80,7 @@ func TestCompetitionClient_CompetitionByCountryId(t *testing.T) {
 		assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 		assert.Equal(t, "Error in competition client: rpc error: code = Internal desc = internal error", hook.LastEntry().Message)
 		m.AssertExpectations(t)
-		stream.AssertNotCalled(t,"Recv")
+		stream.AssertNotCalled(t, "Recv")
 	})
 
 	t.Run("logs error and returns internal server error for non internal server error returned by client", func(t *testing.T) {
@@ -113,7 +113,7 @@ func TestCompetitionClient_CompetitionByCountryId(t *testing.T) {
 		assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 		assert.Equal(t, "Error in competition client: rpc error: code = Unavailable desc = service unavailable", hook.LastEntry().Message)
 		m.AssertExpectations(t)
-		stream.AssertNotCalled(t,"Recv")
+		stream.AssertNotCalled(t, "Recv")
 	})
 
 	t.Run("logs error and returns internal server error if error reading from stream", func(t *testing.T) {
