@@ -12,7 +12,7 @@ import (
 )
 
 type CompetitionClient interface {
-	ListCompetitions(ctx context.Context, req *proto.CompetitionRequest) ([]*app.Competition, error)
+	CompetitionByCountryId(ctx context.Context, countryId uint64) ([]*app.Competition, error)
 }
 
 type competitionClient struct {
@@ -20,10 +20,12 @@ type competitionClient struct {
 	logger *logrus.Logger
 }
 
-func (c competitionClient) ListCompetitions(ctx context.Context, req *proto.CompetitionRequest) ([]*app.Competition, error) {
+func (c competitionClient) CompetitionByCountryId(ctx context.Context, countryId uint64) ([]*app.Competition, error) {
 	competitions := []*app.Competition{}
 
-	stream, err := c.client.ListCompetitions(ctx, req)
+	req := proto.CompetitionRequest{CountryIds: []uint64{countryId}}
+
+	stream, err := c.client.ListCompetitions(ctx, &req)
 
 	if err != nil {
 		if e, ok := status.FromError(err); ok {
@@ -57,7 +59,7 @@ func (c competitionClient) ListCompetitions(ctx context.Context, req *proto.Comp
 }
 
 func (c competitionClient) logError(err error) {
-	c.logger.Errorf("Error in competition client %s", err.Error())
+	c.logger.Errorf("Error in competition client: %s", err.Error())
 }
 
 func NewCompetitionClient(p proto.CompetitionServiceClient, l *logrus.Logger) CompetitionClient {
