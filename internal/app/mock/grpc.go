@@ -7,6 +7,26 @@ import (
 	"google.golang.org/grpc"
 )
 
+type CompetitionClient struct {
+	mock.Mock
+}
+
+func (c *CompetitionClient) ListCompetitions(ctx context.Context, in *proto.CompetitionRequest, opts ...grpc.CallOption) (proto.CompetitionService_ListCompetitionsClient, error) {
+	args := c.Called(ctx, in, opts)
+	return args.Get(0).(proto.CompetitionService_ListCompetitionsClient), args.Error(1)
+}
+
+type CompetitionStream struct {
+	mock.Mock
+	grpc.ClientStream
+}
+
+func (c *CompetitionStream) Recv() (*proto.Competition, error) {
+	args := c.Called()
+	return args.Get(0).(*proto.Competition), args.Error(1)
+}
+
+
 type TeamClient struct {
 	mock.Mock
 }

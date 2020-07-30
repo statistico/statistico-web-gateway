@@ -6,6 +6,16 @@ import (
 	"time"
 )
 
+func convertCompetition(c *proto.Competition) *app.Competition {
+	var x app.Competition
+	x.ID = c.GetId()
+	x.Name = c.GetName()
+	x.IsCup = c.GetIsCup()
+	x.CountryID = c.GetCountryId()
+
+	return &x
+}
+
 func convertResult(result *proto.Result) (*app.Result, error) {
 	d, err := time.Parse(time.RFC3339, result.GetDateTime().GetRfc())
 
