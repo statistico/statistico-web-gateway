@@ -15,6 +15,11 @@ func (c *CompetitionComposer) CompetitionsByCountryId(countryId uint64) ([]*app.
 	return args.Get(0).([]*app.Competition), args.Error(1)
 }
 
+func (c *CompetitionComposer) CompetitionSeasons(competitionId uint64) ([]*app.Season, error) {
+	args := c.Called(competitionId)
+	return args.Get(0).([]*app.Season), args.Error(1)
+}
+
 type TeamComposer struct {
 	mock.Mock
 }

@@ -10,6 +10,10 @@ func (c Container) RestResultHandler() *rest.ResultHandler {
 	return rest.NewResultHandler(c.ResultComposer())
 }
 
+func (c Container) RestSeasonHandler() *rest.SeasonHandler {
+	return rest.NewSeasonHandler(c.CompetitionComposer())
+}
+
 func (c Container) RestTeamHandler() *rest.TeamHandler {
 	return rest.NewTeamHandler(c.TeamComposer())
 }
