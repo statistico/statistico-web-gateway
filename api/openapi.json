@@ -10,50 +10,22 @@
     }
   ],
   "paths": {
-    "/competition": {
+    "/country/{id}/competitions": {
       "get": {
         "tags": [
-          "Competition",
+          "Country",
           "In development"
         ],
         "description": "Get competition resources",
         "parameters": [
           {
-            "name": "countryId",
-            "in": "query",
-            "description": "Filter competition resources by associated countries",
-            "required": false,
+            "name": "id",
+            "in": "path",
+            "description": "ID of country resource",
+            "required": true,
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "description": "Sort resources by ID",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "id_asc",
-                "id_desc"
-              ]
-            }
-          },
-          {
-            "name": "isCup",
-            "in": "query",
-            "description": "Filter competition resources by is cup parameter",
-            "required": false,
-            "schema": {
-              "type": "boolean",
-              "enum": [
-                true,
-                false
-              ]
+              "type": "number",
+              "example": 462
             }
           }
         ],
@@ -303,7 +275,7 @@
     "/season/{id}/teams": {
       "get": {
         "tags": [
-          "Team",
+          "Season",
           "In development"
         ],
         "description": "Get team resources associated to a season resource",
