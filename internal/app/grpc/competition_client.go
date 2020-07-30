@@ -12,7 +12,7 @@ import (
 )
 
 type CompetitionClient interface {
-	CompetitionByCountryId(ctx context.Context, countryId uint64) ([]*app.Competition, error)
+	CompetitionsByCountryId(ctx context.Context, countryId uint64) ([]*app.Competition, error)
 }
 
 type competitionClient struct {
@@ -20,7 +20,7 @@ type competitionClient struct {
 	logger *logrus.Logger
 }
 
-func (c competitionClient) CompetitionByCountryId(ctx context.Context, countryId uint64) ([]*app.Competition, error) {
+func (c competitionClient) CompetitionsByCountryId(ctx context.Context, countryId uint64) ([]*app.Competition, error) {
 	competitions := []*app.Competition{}
 
 	req := proto.CompetitionRequest{CountryIds: []uint64{countryId}}

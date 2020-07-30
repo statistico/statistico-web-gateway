@@ -38,7 +38,7 @@ func TestCompetitionClient_CompetitionByCountryId(t *testing.T) {
 		stream.On("Recv").Twice().Return(newProtoCompetition(), nil)
 		stream.On("Recv").Once().Return(&proto.Competition{}, io.EOF)
 
-		competitions, err := client.CompetitionByCountryId(ctx, 462)
+		competitions, err := client.CompetitionsByCountryId(ctx, 462)
 
 		if err != nil {
 			t.Fatalf("Expected nil, got %s", err.Error())
@@ -69,7 +69,7 @@ func TestCompetitionClient_CompetitionByCountryId(t *testing.T) {
 
 		m.On("ListCompetitions", ctx, &request, []grpc.CallOption(nil)).Return(stream, e)
 
-		_, err := client.CompetitionByCountryId(ctx, 462)
+		_, err := client.CompetitionsByCountryId(ctx, 462)
 
 		if err == nil {
 			t.Fatal("Expected error, got nil")
@@ -102,7 +102,7 @@ func TestCompetitionClient_CompetitionByCountryId(t *testing.T) {
 
 		m.On("ListCompetitions", ctx, &request, []grpc.CallOption(nil)).Return(stream, e)
 
-		_, err := client.CompetitionByCountryId(ctx, 462)
+		_, err := client.CompetitionsByCountryId(ctx, 462)
 
 		if err == nil {
 			t.Fatal("Expected error, got nil")
@@ -139,7 +139,7 @@ func TestCompetitionClient_CompetitionByCountryId(t *testing.T) {
 		stream.On("Recv").Twice().Return(newProtoCompetition(), nil)
 		stream.On("Recv").Once().Return(&proto.Competition{}, e)
 
-		_, err := client.CompetitionByCountryId(ctx, 462)
+		_, err := client.CompetitionsByCountryId(ctx, 462)
 
 		if err == nil {
 			t.Fatal("Expected errors, got nil")
