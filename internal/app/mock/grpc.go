@@ -26,6 +26,24 @@ func (c *CompetitionStream) Recv() (*proto.Competition, error) {
 	return args.Get(0).(*proto.Competition), args.Error(1)
 }
 
+type SeasonClient struct {
+	mock.Mock
+}
+
+func (s *SeasonClient) GetSeasonsForCompetition(ctx context.Context, in *proto.SeasonCompetitionRequest, opts ...grpc.CallOption) (proto.SeasonService_GetSeasonsForCompetitionClient, error) {
+	args := s.Called(ctx, in, opts)
+	return args.Get(0).(proto.SeasonService_GetSeasonsForCompetitionClient), args.Error(1)
+}
+
+type SeasonStream struct {
+	mock.Mock
+	grpc.ClientStream
+}
+
+func (s *SeasonStream) Recv() (*proto.Season, error) {
+	args := s.Called()
+	return args.Get(0).(*proto.Season), args.Error(1)
+}
 
 type TeamClient struct {
 	mock.Mock

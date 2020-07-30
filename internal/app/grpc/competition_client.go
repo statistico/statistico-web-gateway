@@ -13,19 +13,21 @@ import (
 
 type CompetitionClient interface {
 	CompetitionsByCountryId(ctx context.Context, countryId uint64) ([]*app.Competition, error)
+	CompetitionSeasons(ctx context.Context, competitionId uint64) ([]*app.Season, error)
 }
 
 type competitionClient struct {
-	client proto.CompetitionServiceClient
+	competitionClient proto.CompetitionServiceClient
+	seasonClient proto.SeasonServiceClient
 	logger *logrus.Logger
 }
 
-func (c competitionClient) CompetitionsByCountryId(ctx context.Context, countryId uint64) ([]*app.Competition, error) {
+func (c *competitionClient) CompetitionsByCountryId(ctx context.Context, countryId uint64) ([]*app.Competition, error) {
 	competitions := []*app.Competition{}
 
 	req := proto.CompetitionRequest{CountryIds: []uint64{countryId}}
 
-	stream, err := c.client.ListCompetitions(ctx, &req)
+	stream, err := c.competitionClient.ListCompetitions(ctx, &req)
 
 	if err != nil {
 		if e, ok := status.FromError(err); ok {
@@ -58,13 +60,54 @@ func (c competitionClient) CompetitionsByCountryId(ctx context.Context, countryI
 	return competitions, nil
 }
 
+func (c *competitionClient) CompetitionSeasons(ctx context.Context, competitionId uint64) ([]*app.Season, error) {
+	seasons := []*app.Season{}
+
+	req := proto.SeasonCompetitionRequest{CompetitionId: competitionId}
+
+	stream, err := c.seasonClient.GetSeasonsForCompetition(ctx, &req)
+
+	if err != nil {
+		if e, ok := status.FromError(err); ok {
+			switch e.Code() {
+			case codes.Internal:
+				c.logError(err)
+				return seasons, errors.ErrorInternalServerError
+			default:
+				c.logError(err)
+				return seasons, errors.ErrorBadGateway
+			}
+		}
+	}
+
+	for {
+		season, err := stream.Recv()
+
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			c.logError(err)
+			return seasons, errors.ErrorInternalServerError
+		}
+
+		s := convertSeason(season)
+
+		seasons = append(seasons, &s)
+	}
+
+	return seasons, nil
+}
+
 func (c competitionClient) logError(err error) {
 	c.logger.Errorf("Error in competition client: %s", err.Error())
 }
 
-func NewCompetitionClient(p proto.CompetitionServiceClient, l *logrus.Logger) CompetitionClient {
-	return competitionClient{
-		client: p,
+func NewCompetitionClient(c proto.CompetitionServiceClient, s proto.SeasonServiceClient, l *logrus.Logger) CompetitionClient {
+	return &competitionClient{
+		competitionClient: c,
+		seasonClient: s,
 		logger: l,
 	}
 }

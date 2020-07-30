@@ -3,6 +3,7 @@ package grpc_test
 import (
 	"context"
 	"errors"
+	"github.com/golang/protobuf/ptypes/wrappers"
 	"github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/test"
 	g "github.com/statistico/statistico-web-gateway/internal/app/grpc"
@@ -21,8 +22,9 @@ func TestCompetitionClient_CompetitionByCountryId(t *testing.T) {
 		t.Helper()
 
 		m := new(mock.CompetitionClient)
+		s := new(mock.SeasonClient)
 		logger, hook := test.NewNullLogger()
-		client := g.NewCompetitionClient(m, logger)
+		client := g.NewCompetitionClient(m, s, logger)
 
 		stream := new(mock.CompetitionStream)
 
@@ -51,9 +53,12 @@ func TestCompetitionClient_CompetitionByCountryId(t *testing.T) {
 	})
 
 	t.Run("logs error and returns internal server error if internal server error returned by client", func(t *testing.T) {
+		t.Helper()
+
 		m := new(mock.CompetitionClient)
+		s := new(mock.SeasonClient)
 		logger, hook := test.NewNullLogger()
-		client := g.NewCompetitionClient(m, logger)
+		client := g.NewCompetitionClient(m, s, logger)
 
 		stream := new(mock.CompetitionStream)
 
@@ -83,10 +88,13 @@ func TestCompetitionClient_CompetitionByCountryId(t *testing.T) {
 		stream.AssertNotCalled(t, "Recv")
 	})
 
-	t.Run("logs error and returns internal server error for non internal server error returned by client", func(t *testing.T) {
+	t.Run("logs error and returns bad gateway error for non internal server error returned by client", func(t *testing.T) {
+		t.Helper()
+
 		m := new(mock.CompetitionClient)
+		s := new(mock.SeasonClient)
 		logger, hook := test.NewNullLogger()
-		client := g.NewCompetitionClient(m, logger)
+		client := g.NewCompetitionClient(m, s, logger)
 
 		stream := new(mock.CompetitionStream)
 
@@ -120,8 +128,9 @@ func TestCompetitionClient_CompetitionByCountryId(t *testing.T) {
 		t.Helper()
 
 		m := new(mock.CompetitionClient)
+		s := new(mock.SeasonClient)
 		logger, hook := test.NewNullLogger()
-		client := g.NewCompetitionClient(m, logger)
+		client := g.NewCompetitionClient(m, s, logger)
 
 		stream := new(mock.CompetitionStream)
 
@@ -154,11 +163,161 @@ func TestCompetitionClient_CompetitionByCountryId(t *testing.T) {
 	})
 }
 
+func TestCompetitionClient_CompetitionSeasons(t *testing.T) {
+	t.Run("calls season client and returns a slice of season struct", func(t *testing.T) {
+		t.Helper()
+
+		m := new(mock.CompetitionClient)
+		s := new(mock.SeasonClient)
+		logger, hook := test.NewNullLogger()
+		client := g.NewCompetitionClient(m, s, logger)
+
+		stream := new(mock.SeasonStream)
+
+		request := proto.SeasonCompetitionRequest{
+			CompetitionId: 8,
+			Sort:          nil,
+		}
+
+		ctx := context.Background()
+
+		s.On("GetSeasonsForCompetition", ctx, &request, []grpc.CallOption(nil)).Return(stream, nil)
+		stream.On("Recv").Twice().Return(newProtoSeason(), nil)
+		stream.On("Recv").Once().Return(&proto.Season{}, io.EOF)
+
+		seasons, err := client.CompetitionSeasons(ctx, 8)
+
+		if err != nil {
+			t.Fatalf("Expected nil, got %s", err.Error())
+		}
+
+		assert.Equal(t, 2, len(seasons))
+		assert.Nil(t, hook.LastEntry())
+		s.AssertExpectations(t)
+		stream.AssertExpectations(t)
+	})
+
+	t.Run("logs error and returns internal server error if internal server error returned by client", func(t *testing.T) {
+		t.Helper()
+
+		m := new(mock.CompetitionClient)
+		s := new(mock.SeasonClient)
+		logger, hook := test.NewNullLogger()
+		client := g.NewCompetitionClient(m, s, logger)
+
+		stream := new(mock.SeasonStream)
+
+		request := proto.SeasonCompetitionRequest{
+			CompetitionId: 8,
+			Sort:          nil,
+		}
+
+		ctx := context.Background()
+
+		e := status.Error(codes.Internal, "internal error")
+
+		s.On("GetSeasonsForCompetition", ctx, &request, []grpc.CallOption(nil)).Return(stream, e)
+
+		_, err := client.CompetitionSeasons(ctx, 8)
+
+		if err == nil {
+			t.Fatal("Expected error, got nil")
+		}
+
+		assert.Equal(t, "internal server error", err.Error())
+		assert.Equal(t, 1, len(hook.Entries))
+		assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
+		assert.Equal(t, "Error in competition client: rpc error: code = Internal desc = internal error", hook.LastEntry().Message)
+		s.AssertExpectations(t)
+		stream.AssertNotCalled(t, "Recv")
+	})
+
+	t.Run("logs error and returns bad gateway error for non internal server error returned by client", func(t *testing.T) {
+		t.Helper()
+
+		m := new(mock.CompetitionClient)
+		s := new(mock.SeasonClient)
+		logger, hook := test.NewNullLogger()
+		client := g.NewCompetitionClient(m, s, logger)
+
+		stream := new(mock.SeasonStream)
+
+		request := proto.SeasonCompetitionRequest{
+			CompetitionId: 8,
+			Sort:          nil,
+		}
+
+		ctx := context.Background()
+
+		e := status.Error(codes.Unavailable, "service unavailable")
+
+		s.On("GetSeasonsForCompetition", ctx, &request, []grpc.CallOption(nil)).Return(stream, e)
+
+		_, err := client.CompetitionSeasons(ctx, 8)
+
+		if err == nil {
+			t.Fatal("Expected error, got nil")
+		}
+
+		assert.Equal(t, "error response returned from external service", err.Error())
+		assert.Equal(t, 1, len(hook.Entries))
+		assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
+		assert.Equal(t, "Error in competition client: rpc error: code = Unavailable desc = service unavailable", hook.LastEntry().Message)
+		s.AssertExpectations(t)
+		stream.AssertNotCalled(t, "Recv")
+	})
+
+	t.Run("logs error and returns internal server error if error reading from stream", func(t *testing.T) {
+		t.Helper()
+
+		m := new(mock.CompetitionClient)
+		s := new(mock.SeasonClient)
+		logger, hook := test.NewNullLogger()
+		client := g.NewCompetitionClient(m, s, logger)
+
+		stream := new(mock.SeasonStream)
+
+		request := proto.SeasonCompetitionRequest{
+			CompetitionId: 8,
+			Sort:          nil,
+		}
+
+		ctx := context.Background()
+
+		e := errors.New("oh damn")
+
+		s.On("GetSeasonsForCompetition", ctx, &request, []grpc.CallOption(nil)).Return(stream, nil)
+		stream.On("Recv").Twice().Return(newProtoSeason(), nil)
+		stream.On("Recv").Once().Return(&proto.Season{}, e)
+
+		_, err := client.CompetitionSeasons(ctx, 8)
+
+		if err == nil {
+			t.Fatal("Expected errors, got nil")
+		}
+
+		assert.Equal(t, "internal server error", err.Error())
+		assert.Equal(t, 1, len(hook.Entries))
+		assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
+		assert.Equal(t, "Error in competition client: oh damn", hook.LastEntry().Message)
+		s.AssertExpectations(t)
+		stream.AssertExpectations(t)
+	})
+}
+
 func newProtoCompetition() *proto.Competition {
 	return &proto.Competition{
 		Id:        8,
 		Name:      "Premier League",
 		IsCup:     false,
 		CountryId: 462,
+	}
+}
+
+func newProtoSeason() *proto.Season {
+	return &proto.Season{
+		Id:        16036,
+		Name:      "2019/2020",
+		IsCurrent: &wrappers.BoolValue{Value: true},
 	}
 }
