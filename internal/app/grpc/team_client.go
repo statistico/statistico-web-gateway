@@ -86,7 +86,7 @@ func (t teamClient) TeamsBySeasonId(ctx context.Context, seasonId uint64) ([]*ap
 }
 
 func (t teamClient) logError(err error) {
-	t.logger.Errorf("Error in team client %s", err.Error())
+	t.logger.Errorf("Error in team client: %s", err.Error())
 }
 
 func NewTeamClient(p proto.TeamServiceClient, log *logrus.Logger) TeamClient {
