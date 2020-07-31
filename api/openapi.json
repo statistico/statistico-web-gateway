@@ -13,8 +13,7 @@
     "/country/{id}/competitions": {
       "get": {
         "tags": [
-          "Country",
-          "In development"
+          "Country"
         ],
         "description": "Get competition resources",
         "parameters": [
@@ -69,8 +68,7 @@
     "/competition/{id}/seasons": {
       "get": {
         "tags": [
-          "Competition",
-          "In development"
+          "Competition"
         ],
         "description": "Get season resources associated to a competition resource",
         "parameters": [
@@ -275,8 +273,7 @@
     "/season/{id}/teams": {
       "get": {
         "tags": [
-          "Season",
-          "In development"
+          "Season"
         ],
         "description": "Get team resources associated to a season resource",
         "parameters": [

@@ -9,7 +9,6 @@ paths:
     get:
       tags:
         - Country
-        - In development
       description: Get competition resources
       parameters:
         - name: id
@@ -45,7 +44,6 @@ paths:
     get:
       tags:
         - Competition
-        - In development
       description: Get season resources associated to a competition resource
       parameters:
         - name: id
@@ -175,7 +173,6 @@ paths:
     get:
       tags:
         - Season
-        - In development
       description: Get team resources associated to a season resource
       parameters:
         - name: id
