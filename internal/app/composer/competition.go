@@ -8,7 +8,7 @@ import (
 
 type CompetitionComposer interface {
 	CompetitionsByCountryId(countryId uint64) ([]*app.Competition, error)
-	CompetitionSeasons(competitionId uint64) ([]*app.Season, error)
+	CompetitionSeasons(competitionId uint64, sort string) ([]*app.Season, error)
 }
 
 type competitionComposer struct {
@@ -19,8 +19,8 @@ func (c *competitionComposer) CompetitionsByCountryId(countryId uint64) ([]*app.
 	return c.client.CompetitionsByCountryId(context.Background(), countryId)
 }
 
-func (c *competitionComposer) CompetitionSeasons(competitionId uint64) ([]*app.Season, error) {
-	return c.client.CompetitionSeasons(context.Background(), competitionId)
+func (c *competitionComposer) CompetitionSeasons(competitionId uint64, sort string) ([]*app.Season, error) {
+	return c.client.CompetitionSeasons(context.Background(), competitionId, sort)
 }
 
 func NewCompetitionComposer(c grpc.CompetitionClient) CompetitionComposer {

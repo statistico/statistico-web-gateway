@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"context"
+	"github.com/golang/protobuf/ptypes/wrappers"
 	"github.com/sirupsen/logrus"
 	"github.com/statistico/statistico-web-gateway/internal/app"
 	"github.com/statistico/statistico-web-gateway/internal/app/errors"
@@ -13,7 +14,7 @@ import (
 
 type CompetitionClient interface {
 	CompetitionsByCountryId(ctx context.Context, countryId uint64) ([]*app.Competition, error)
-	CompetitionSeasons(ctx context.Context, competitionId uint64) ([]*app.Season, error)
+	CompetitionSeasons(ctx context.Context, competitionId uint64, sort string) ([]*app.Season, error)
 }
 
 type competitionClient struct {
@@ -60,10 +61,10 @@ func (c *competitionClient) CompetitionsByCountryId(ctx context.Context, country
 	return competitions, nil
 }
 
-func (c *competitionClient) CompetitionSeasons(ctx context.Context, competitionId uint64) ([]*app.Season, error) {
+func (c *competitionClient) CompetitionSeasons(ctx context.Context, competitionId uint64, sort string) ([]*app.Season, error) {
 	seasons := []*app.Season{}
 
-	req := proto.SeasonCompetitionRequest{CompetitionId: competitionId}
+	req := proto.SeasonCompetitionRequest{CompetitionId: competitionId, Sort: &wrappers.StringValue{Value: sort}}
 
 	stream, err := c.seasonClient.GetSeasonsForCompetition(ctx, &req)
 
