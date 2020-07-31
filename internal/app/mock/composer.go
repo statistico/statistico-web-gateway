@@ -29,6 +29,11 @@ func (t *TeamComposer) TeamById(id uint64) (*app.Team, error) {
 	return args.Get(0).(*app.Team), args.Error(1)
 }
 
+func (t *TeamComposer) TeamsBySeasonId(seasonId uint64) ([]*app.Team, error) {
+	args := t.Called(seasonId)
+	return args.Get(0).([]*app.Team), args.Error(1)
+}
+
 type ResultComposer struct {
 	mock.Mock
 }
