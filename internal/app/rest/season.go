@@ -14,7 +14,7 @@ type SeasonHandler struct {
 	composer composer.CompetitionComposer
 }
 
-func (s *SeasonHandler) ByCompetitionId(w http.ResponseWriter, _ *http.Request, ps httprouter.Params) {
+func (s *SeasonHandler) ByCompetitionId(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	param := ps.ByName("id")
 	id, err := strconv.Atoi(param)
 
@@ -23,7 +23,9 @@ func (s *SeasonHandler) ByCompetitionId(w http.ResponseWriter, _ *http.Request, 
 		return
 	}
 
-	seasons, err := s.composer.CompetitionSeasons(uint64(id))
+	sort := r.URL.Query().Get("sort")
+
+	seasons, err := s.composer.CompetitionSeasons(uint64(id), sort)
 
 	if err != nil {
 		if err == e.ErrorInternalServerError {

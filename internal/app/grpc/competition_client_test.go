@@ -176,7 +176,7 @@ func TestCompetitionClient_CompetitionSeasons(t *testing.T) {
 
 		request := proto.SeasonCompetitionRequest{
 			CompetitionId: 8,
-			Sort:          nil,
+			Sort:          &wrappers.StringValue{Value: "name_asc"},
 		}
 
 		ctx := context.Background()
@@ -185,7 +185,7 @@ func TestCompetitionClient_CompetitionSeasons(t *testing.T) {
 		stream.On("Recv").Twice().Return(newProtoSeason(), nil)
 		stream.On("Recv").Once().Return(&proto.Season{}, io.EOF)
 
-		seasons, err := client.CompetitionSeasons(ctx, 8)
+		seasons, err := client.CompetitionSeasons(ctx, 8, "name_asc")
 
 		if err != nil {
 			t.Fatalf("Expected nil, got %s", err.Error())
@@ -209,7 +209,7 @@ func TestCompetitionClient_CompetitionSeasons(t *testing.T) {
 
 		request := proto.SeasonCompetitionRequest{
 			CompetitionId: 8,
-			Sort:          nil,
+			Sort:          &wrappers.StringValue{Value: "name_asc"},
 		}
 
 		ctx := context.Background()
@@ -218,7 +218,7 @@ func TestCompetitionClient_CompetitionSeasons(t *testing.T) {
 
 		s.On("GetSeasonsForCompetition", ctx, &request, []grpc.CallOption(nil)).Return(stream, e)
 
-		_, err := client.CompetitionSeasons(ctx, 8)
+		_, err := client.CompetitionSeasons(ctx, 8, "name_asc")
 
 		if err == nil {
 			t.Fatal("Expected error, got nil")
@@ -244,7 +244,7 @@ func TestCompetitionClient_CompetitionSeasons(t *testing.T) {
 
 		request := proto.SeasonCompetitionRequest{
 			CompetitionId: 8,
-			Sort:          nil,
+			Sort:          &wrappers.StringValue{Value: "name_asc"},
 		}
 
 		ctx := context.Background()
@@ -253,7 +253,7 @@ func TestCompetitionClient_CompetitionSeasons(t *testing.T) {
 
 		s.On("GetSeasonsForCompetition", ctx, &request, []grpc.CallOption(nil)).Return(stream, e)
 
-		_, err := client.CompetitionSeasons(ctx, 8)
+		_, err := client.CompetitionSeasons(ctx, 8, "name_asc")
 
 		if err == nil {
 			t.Fatal("Expected error, got nil")
@@ -279,7 +279,7 @@ func TestCompetitionClient_CompetitionSeasons(t *testing.T) {
 
 		request := proto.SeasonCompetitionRequest{
 			CompetitionId: 8,
-			Sort:          nil,
+			Sort:          &wrappers.StringValue{Value: "name_asc"},
 		}
 
 		ctx := context.Background()
@@ -290,7 +290,7 @@ func TestCompetitionClient_CompetitionSeasons(t *testing.T) {
 		stream.On("Recv").Twice().Return(newProtoSeason(), nil)
 		stream.On("Recv").Once().Return(&proto.Season{}, e)
 
-		_, err := client.CompetitionSeasons(ctx, 8)
+		_, err := client.CompetitionSeasons(ctx, 8, "name_asc")
 
 		if err == nil {
 			t.Fatal("Expected errors, got nil")

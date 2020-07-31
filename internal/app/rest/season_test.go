@@ -29,7 +29,40 @@ func TestSeasonHandler_ByCompetitionId(t *testing.T) {
 
 		res := httptest.NewRecorder()
 
-		c.On("CompetitionSeasons", uint64(8)).Return(seasons(), nil)
+		c.On("CompetitionSeasons", uint64(8), "").Return(seasons(), nil)
+
+		handler.ByCompetitionId(res, req, params)
+
+		expected := `{"status":"success","data":{"seasons":[{"id":12968,"name":"2018/2019","isCurrent":false},` +
+			`{"id":16036,"name":"2019/2020","isCurrent":true}]}}`
+
+		assert.Equal(t, http.StatusOK, res.Code)
+		assert.Equal(t, expected, res.Body.String())
+		c.AssertExpectations(t)
+	})
+
+	t.Run("parses sort query parameter and returns a 200 response containing seasons data", func(t *testing.T) {
+		t.Helper()
+
+		c := new(mock.CompetitionComposer)
+		handler := rest.NewSeasonHandler(c)
+
+		req := httptest.NewRequest(http.MethodGet, "/competition/8/seasons", nil)
+
+		q := req.URL.Query()
+		q.Add("sort", "name_asc")
+		req.URL.RawQuery = q.Encode()
+
+		params := httprouter.Params{
+			httprouter.Param{
+				Key:   "id",
+				Value: "8",
+			},
+		}
+
+		res := httptest.NewRecorder()
+
+		c.On("CompetitionSeasons", uint64(8), "name_asc").Return(seasons(), nil)
 
 		handler.ByCompetitionId(res, req, params)
 
@@ -57,7 +90,7 @@ func TestSeasonHandler_ByCompetitionId(t *testing.T) {
 
 		res := httptest.NewRecorder()
 
-		c.On("CompetitionSeasons", uint64(8)).Return([]*app.Season{}, nil)
+		c.On("CompetitionSeasons", uint64(8), "").Return([]*app.Season{}, nil)
 
 		handler.ByCompetitionId(res, req, params)
 
@@ -109,7 +142,7 @@ func TestSeasonHandler_ByCompetitionId(t *testing.T) {
 
 		res := httptest.NewRecorder()
 
-		c.On("CompetitionSeasons", uint64(8)).Return([]*app.Season{}, e.ErrorInternalServerError)
+		c.On("CompetitionSeasons", uint64(8), "").Return([]*app.Season{}, e.ErrorInternalServerError)
 
 		handler.ByCompetitionId(res, req, params)
 
@@ -136,7 +169,7 @@ func TestSeasonHandler_ByCompetitionId(t *testing.T) {
 
 		res := httptest.NewRecorder()
 
-		c.On("CompetitionSeasons", uint64(8)).Return([]*app.Season{}, e.ErrorBadGateway)
+		c.On("CompetitionSeasons", uint64(8), "").Return([]*app.Season{}, e.ErrorBadGateway)
 
 		handler.ByCompetitionId(res, req, params)
 
