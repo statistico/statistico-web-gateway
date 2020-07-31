@@ -54,6 +54,21 @@ func (t *TeamClient) GetTeamByID(ctx context.Context, in *proto.TeamRequest, opt
 	return args.Get(0).(*proto.Team), args.Error(1)
 }
 
+func (t *TeamClient) GetTeamsBySeasonId(ctx context.Context, in *proto.SeasonTeamsRequest, opts ...grpc.CallOption) (proto.TeamService_GetTeamsBySeasonIdClient, error) {
+	args := t.Called(ctx, in, opts)
+	return args.Get(0).(proto.TeamService_GetTeamsBySeasonIdClient), args.Error(1)
+}
+
+type TeamStream struct {
+	mock.Mock
+	grpc.ClientStream
+}
+
+func (t *TeamStream) Recv() (*proto.Team, error) {
+	args := t.Called()
+	return args.Get(0).(*proto.Team), args.Error(1)
+}
+
 type ResultClient struct {
 	mock.Mock
 }

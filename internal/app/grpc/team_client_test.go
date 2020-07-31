@@ -13,6 +13,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"io"
 	"testing"
 )
 
@@ -175,5 +176,145 @@ func TestTeamDataClient_TeamById(t *testing.T) {
 		assert.Equal(t, "internal server error", err.Error())
 		assert.Equal(t, 1, len(hook.Entries))
 		assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
+	})
+}
+
+func TestTeamClient_TeamsBySeasonId(t *testing.T) {
+	t.Run("calls team client and returns a slice of team struct", func(t *testing.T) {
+		t.Helper()
+
+		m := new(mock.TeamClient)
+		logger, hook := test.NewNullLogger()
+		client := g.NewTeamClient(m, logger)
+
+		stream := new(mock.TeamStream)
+
+		team := proto.Team{
+			Id:        1,
+			Name:      "West Ham United",
+			CountryId: 8,
+			VenueId:   214,
+		}
+
+		ctx := context.Background()
+
+		request := proto.SeasonTeamsRequest{SeasonId: 16036}
+
+		m.On("GetTeamsBySeasonId", ctx, &request, []grpc.CallOption(nil)).Return(stream, nil)
+		stream.On("Recv").Twice().Return(&team, nil)
+		stream.On("Recv").Once().Return(&proto.Team{}, io.EOF)
+
+		teams, err := client.TeamsBySeasonId(ctx, 16036)
+
+		if err != nil {
+			t.Fatalf("Expected nil, got %s", err.Error())
+		}
+
+		assert.Equal(t, 2, len(teams))
+		assert.Nil(t, hook.LastEntry())
+		m.AssertExpectations(t)
+		stream.AssertExpectations(t)
+	})
+
+	t.Run("logs error and returns internal server error if internal server error is returned by client", func(t *testing.T) {
+		t.Helper()
+
+		m := new(mock.TeamClient)
+		logger, hook := test.NewNullLogger()
+		client := g.NewTeamClient(m, logger)
+
+		stream := new(mock.TeamStream)
+
+		ctx := context.Background()
+
+		request := proto.SeasonTeamsRequest{SeasonId: 16036}
+
+		e := status.Error(codes.Internal, "internal error")
+
+		m.On("GetTeamsBySeasonId", ctx, &request, []grpc.CallOption(nil)).Return(stream, e)
+
+		_, err := client.TeamsBySeasonId(ctx, 16036)
+
+		if err == nil {
+			t.Fatal("Expected error, got nil")
+		}
+
+		assert.Equal(t, "internal server error", err.Error())
+		assert.Equal(t, 1, len(hook.Entries))
+		assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
+		assert.Equal(t, "Error in team client: rpc error: code = Internal desc = internal error", hook.LastEntry().Message)
+		m.AssertExpectations(t)
+		stream.AssertNotCalled(t, "Recv")
+	})
+
+	t.Run("logs error and returns bad gateway error for non internal server error returned by client", func(t *testing.T) {
+		t.Helper()
+
+		m := new(mock.TeamClient)
+		logger, hook := test.NewNullLogger()
+		client := g.NewTeamClient(m, logger)
+
+		stream := new(mock.TeamStream)
+
+		ctx := context.Background()
+
+		request := proto.SeasonTeamsRequest{SeasonId: 16036}
+
+		e := status.Error(codes.Unavailable, "service unavailable")
+
+		m.On("GetTeamsBySeasonId", ctx, &request, []grpc.CallOption(nil)).Return(stream, e)
+
+		_, err := client.TeamsBySeasonId(ctx, 16036)
+
+		if err == nil {
+			t.Fatal("Expected error, got nil")
+		}
+
+		assert.Equal(t, "error response returned from external service", err.Error())
+		assert.Equal(t, 1, len(hook.Entries))
+		assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
+		assert.Equal(t, "Error in team client: rpc error: code = Unavailable desc = service unavailable", hook.LastEntry().Message)
+		m.AssertExpectations(t)
+		stream.AssertNotCalled(t, "Recv")
+	})
+
+	t.Run("logs error and returns internal server error if error reading from stream", func(t *testing.T) {
+		t.Helper()
+
+		m := new(mock.TeamClient)
+		logger, hook := test.NewNullLogger()
+		client := g.NewTeamClient(m, logger)
+
+		stream := new(mock.TeamStream)
+
+		team := proto.Team{
+			Id:        1,
+			Name:      "West Ham United",
+			CountryId: 8,
+			VenueId:   214,
+		}
+
+		ctx := context.Background()
+
+		request := proto.SeasonTeamsRequest{SeasonId: 16036}
+
+		e := errors.New("oh damn")
+
+		m.On("GetTeamsBySeasonId", ctx, &request, []grpc.CallOption(nil)).Return(stream, nil)
+		stream.On("Recv").Twice().Return(&team, nil)
+		stream.On("Recv").Once().Return(&proto.Team{}, e)
+
+		_, err := client.TeamsBySeasonId(ctx, 16036)
+
+		if err == nil {
+			t.Fatal("Expected error, got nil")
+		}
+
+		assert.Equal(t, "internal server error", err.Error())
+		assert.Equal(t, 1, len(hook.Entries))
+		assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
+		assert.Equal(t, "Error in team client: oh damn", hook.LastEntry().Message)
+		m.AssertExpectations(t)
+		stream.AssertExpectations(t)
 	})
 }
