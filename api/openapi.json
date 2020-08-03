@@ -218,113 +218,6 @@
         }
       }
     },
-    "/team/{id}": {
-      "get": {
-        "tags": [
-          "Team"
-        ],
-        "description": "Get a team resource",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "The id of the team resource",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": 1
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The team resource",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "team": {
-                          "$ref": "#/components/schemas/Team"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default non 200 response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StandardResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/season/{id}/teams": {
-      "get": {
-        "tags": [
-          "Season"
-        ],
-        "description": "Get team resources associated to a season resource",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "The competition resource ID",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": 16036
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The team resource",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "teams": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/Team"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default non 200 response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StandardResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/result-search": {
       "post": {
         "tags": [
@@ -406,6 +299,168 @@
                           "type": "array",
                           "items": {
                             "$ref": "#/components/schemas/Result"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default non 200 response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/season/{id}/teams": {
+      "get": {
+        "tags": [
+          "Season"
+        ],
+        "description": "Get team resources associated to a season resource",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The competition resource ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": 16036
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The team resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "teams": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Team"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default non 200 response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/team/{id}": {
+      "get": {
+        "tags": [
+          "Team"
+        ],
+        "description": "Get a team resource",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the team resource",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The team resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "team": {
+                          "$ref": "#/components/schemas/Team"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default non 200 response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/team/{id}/seasons": {
+      "get": {
+        "tags": [
+          "Team"
+        ],
+        "description": "Get season reasons associated to a team resource",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the team resource",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of season resources",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "seasons": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Season"
                           }
                         }
                       }
