@@ -347,7 +347,7 @@ func TestSeasonHandler_ByTeamId(t *testing.T) {
 				Value: "8",
 			},
 		}
-	
+
 		res := httptest.NewRecorder()
 
 		s.On("ByTeamId", uint64(8), "").Return([]*app.Season{}, e.ErrorBadGateway)

@@ -22,6 +22,7 @@ func main() {
 	router.POST("/result-search", container.RestResultHandler().Fetch)
 	router.GET("/season/:id/teams", container.RestTeamHandler().TeamsBySeasonId)
 	router.GET("/team/:id", container.RestTeamHandler().TeamById)
+	router.GET("/team/:id/seasons", container.RestSeasonHandler().ByTeamId)
 
 	server := rest.MiddlewarePipe(
 		router,
