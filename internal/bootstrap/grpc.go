@@ -15,6 +15,12 @@ func (c Container) GRPCResultClient() grpc.ResultClient {
 	client := proto.NewResultServiceClient(c.StatisticoDataServiceConnection)
 	return grpc.NewResultClient(client, c.Logger)
 }
+
+func (c Container) GRPCSeasonClient() grpc.SeasonClient {
+	client := proto.NewSeasonServiceClient(c.StatisticoDataServiceConnection)
+	return grpc.NewSeasonClient(client, c.Logger)
+}
+
 func (c Container) GRPCTeamClient() grpc.TeamClient {
 	client := proto.NewTeamServiceClient(c.StatisticoDataServiceConnection)
 	return grpc.NewTeamClient(client, c.Logger)
