@@ -11,7 +11,7 @@ func (c Container) RestResultHandler() *rest.ResultHandler {
 }
 
 func (c Container) RestSeasonHandler() *rest.SeasonHandler {
-	return rest.NewSeasonHandler(c.CompetitionComposer())
+	return rest.NewSeasonHandler(c.CompetitionComposer(), c.SeasonComposer())
 }
 
 func (c Container) RestTeamHandler() *rest.TeamHandler {

@@ -11,7 +11,8 @@ import (
 )
 
 type SeasonHandler struct {
-	composer composer.CompetitionComposer
+	competitionComposer composer.CompetitionComposer
+	seasonComposer composer.SeasonComposer
 }
 
 func (s *SeasonHandler) ByCompetitionId(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -25,7 +26,33 @@ func (s *SeasonHandler) ByCompetitionId(w http.ResponseWriter, r *http.Request, 
 
 	sort := r.URL.Query().Get("sort")
 
-	seasons, err := s.composer.CompetitionSeasons(uint64(id), sort)
+	seasons, err := s.competitionComposer.CompetitionSeasons(uint64(id), sort)
+
+	if err != nil {
+		if err == e.ErrorInternalServerError {
+			errorResponse(w, http.StatusInternalServerError, errors.New("internal server error"))
+			return
+		}
+
+		errorResponse(w, http.StatusBadGateway, errors.New("bad gateway"))
+		return
+	}
+
+	seasonsResponse(w, seasons)
+}
+
+func (s *SeasonHandler) ByTeamId(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	param := ps.ByName("id")
+	id, err := strconv.Atoi(param)
+
+	if err != nil {
+		failResponse(w, http.StatusBadRequest, errors.New("unable to parse ID parameter as correct schema"))
+		return
+	}
+
+	sort := r.URL.Query().Get("sort")
+
+	seasons, err := s.seasonComposer.ByTeamId(uint64(id), sort)
 
 	if err != nil {
 		if err == e.ErrorInternalServerError {
@@ -50,6 +77,6 @@ func seasonsResponse(w http.ResponseWriter, seasons []*app.Season) {
 	successResponse(w, http.StatusOK, payload)
 }
 
-func NewSeasonHandler(c composer.CompetitionComposer) *SeasonHandler {
-	return &SeasonHandler{composer: c}
+func NewSeasonHandler(c composer.CompetitionComposer, s composer.SeasonComposer) *SeasonHandler {
+	return &SeasonHandler{competitionComposer: c, seasonComposer: s}
 }
