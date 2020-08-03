@@ -42,3 +42,12 @@ func (r *ResultComposer) FetchResults(filters *composer.Filters) ([]*app.Result,
 	args := r.Called(filters)
 	return args.Get(0).([]*app.Result), args.Error(1)
 }
+
+type SeasonComposer struct {
+	mock.Mock
+}
+
+func (s *SeasonComposer) ByTeamId(teamId uint64, sort string) ([]*app.Season, error) {
+	args := s.Called(teamId, sort)
+	return args.Get(0).([]*app.Season), args.Error(1)
+}

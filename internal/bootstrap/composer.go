@@ -10,6 +10,10 @@ func (c Container) ResultComposer() composer.ResultComposer {
 	return composer.NewResultComposer(c.GRPCResultClient())
 }
 
+func (c Container) SeasonComposer() composer.SeasonComposer {
+	return composer.NewSeasonComposer(c.GRPCSeasonClient())
+}
+
 func (c Container) TeamComposer() composer.TeamComposer {
 	return composer.NewTeamComposer(c.GRPCTeamClient())
 }
