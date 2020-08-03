@@ -444,6 +444,19 @@
               "type": "string",
               "example": 1
             }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort resources by season name",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "name_asc",
+                "name_desc"
+              ]
+            }
           }
         ],
         "responses": {
