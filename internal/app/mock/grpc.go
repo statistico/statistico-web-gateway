@@ -35,6 +35,11 @@ func (s *SeasonClient) GetSeasonsForCompetition(ctx context.Context, in *proto.S
 	return args.Get(0).(proto.SeasonService_GetSeasonsForCompetitionClient), args.Error(1)
 }
 
+func (s *SeasonClient) GetSeasonsForTeam(ctx context.Context, in *proto.TeamSeasonsRequest, opts ...grpc.CallOption) (proto.SeasonService_GetSeasonsForTeamClient, error) {
+	args := s.Called(ctx, in, opts)
+	return args.Get(0).(proto.SeasonService_GetSeasonsForTeamClient), args.Error(1)
+}
+
 type SeasonStream struct {
 	mock.Mock
 	grpc.ClientStream
