@@ -257,7 +257,7 @@ func results() []*app.Result {
 		HomeTeam: home,
 		AwayTeam: away,
 		Season:   season,
-		Round:    round,
+		Round:    &round,
 		Venue:    venue,
 		DateTime: app.JsonDate(date),
 		Stats:    stats,
