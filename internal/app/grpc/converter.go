@@ -57,17 +57,21 @@ func convertResultStats(stats *proto.MatchStats) app.ResultStats {
 	return s
 }
 
-func convertRound(round *proto.Round) (app.Round, error) {
+func convertRound(round *proto.Round) (*app.Round, error) {
+	if round == nil {
+		return nil, nil
+	}
+
 	start, err := time.Parse(time.RFC3339, round.GetStartDate())
 
 	if err != nil {
-		return app.Round{}, err
+		return nil, err
 	}
 
 	end, err := time.Parse(time.RFC3339, round.GetEndDate())
 
 	if err != nil {
-		return app.Round{}, err
+		return nil, err
 	}
 
 	r := app.Round{
@@ -78,7 +82,7 @@ func convertRound(round *proto.Round) (app.Round, error) {
 		EndDate:   app.JsonDate(end),
 	}
 
-	return r, nil
+	return &r, nil
 }
 
 func convertSeason(season *proto.Season) app.Season {
