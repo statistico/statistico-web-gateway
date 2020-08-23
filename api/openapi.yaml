@@ -230,6 +230,7 @@ paths:
                   nullable: true
                 sort:
                   type: string
+                  description: The date of the fixture
                   enum:
                     - date_asc
                     - date_desc
@@ -638,30 +639,6 @@ components:
         fixtureId:
           type: integer
           example: 16918
-        stat:
-          type: string
-          enum:
-            - attacks_dangerous
-            - attacks_total
-            - corners
-            - fouls
-            - goals
-            - goal_attempts
-            - offsides
-            - passes_accuracy
-            - passes_percentage
-            - passes_total
-            - possession
-            - red_cards
-            - saves
-            - shots_blocked
-            - shots_inside_box
-            - shots_off_goal
-            - shots_on_goal
-            - shots_outside_box
-            - shots_total
-            - yellow_cards
-            - xG
         value:
           type: integer
           example: 2
