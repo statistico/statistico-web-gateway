@@ -25,3 +25,8 @@ func (c Container) GRPCTeamClient() grpc.TeamClient {
 	client := proto.NewTeamServiceClient(c.StatisticoDataServiceConnection)
 	return grpc.NewTeamClient(client, c.Logger)
 }
+
+func (c Container) GRPCTeamStatClient() grpc.TeamStatClient {
+	client := proto.NewTeamStatsServiceClient(c.StatisticoDataServiceConnection)
+	return grpc.NewTeamStatClient(client, c.Logger)
+}

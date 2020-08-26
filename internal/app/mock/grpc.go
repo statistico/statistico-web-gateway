@@ -92,3 +92,23 @@ func (r *ResultStream) Recv() (*proto.Result, error) {
 	args := r.Called()
 	return args.Get(0).(*proto.Result), args.Error(1)
 }
+
+
+type TeamStatClient struct {
+	mock.Mock
+}
+
+func (t *TeamStatClient) GetStatForTeam(ctx context.Context, in *proto.TeamStatRequest, opts ...grpc.CallOption) (proto.TeamStatsService_GetStatForTeamClient, error) {
+	args := t.Called(ctx, in, opts)
+	return args.Get(0).(proto.TeamStatsService_GetStatForTeamClient), args.Error(1)
+}
+
+type TeamStatStream struct {
+	mock.Mock
+	grpc.ClientStream
+}
+
+func (t *TeamStatStream) Recv() (*proto.TeamStat, error) {
+	args := t.Called()
+	return args.Get(0).(*proto.TeamStat), args.Error(1)
+}
