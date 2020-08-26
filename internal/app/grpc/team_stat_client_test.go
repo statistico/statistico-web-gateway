@@ -27,9 +27,9 @@ func TestTeamStatClient_Stats(t *testing.T) {
 		stream := new(mock.TeamStatStream)
 
 		request := proto.TeamStatRequest{
-			Stat:       "shots_total",
-			TeamId:     5,
-			SeasonIds:  []uint64{16036},
+			Stat:      "shots_total",
+			TeamId:    5,
+			SeasonIds: []uint64{16036},
 		}
 
 		ctx := context.Background()
@@ -59,9 +59,9 @@ func TestTeamStatClient_Stats(t *testing.T) {
 		stream := new(mock.TeamStatStream)
 
 		request := proto.TeamStatRequest{
-			Stat:       "shots_total",
-			TeamId:     5,
-			SeasonIds:  []uint64{16036},
+			Stat:      "shots_total",
+			TeamId:    5,
+			SeasonIds: []uint64{16036},
 		}
 
 		ctx := context.Background()
@@ -91,9 +91,9 @@ func TestTeamStatClient_Stats(t *testing.T) {
 		stream := new(mock.TeamStatStream)
 
 		request := proto.TeamStatRequest{
-			Stat:       "shots_total",
-			TeamId:     5,
-			SeasonIds:  []uint64{16036},
+			Stat:      "shots_total",
+			TeamId:    5,
+			SeasonIds: []uint64{16036},
 		}
 
 		ctx := context.Background()
@@ -124,9 +124,9 @@ func TestTeamStatClient_Stats(t *testing.T) {
 		stream := new(mock.TeamStatStream)
 
 		request := proto.TeamStatRequest{
-			Stat:       "shots_total",
-			TeamId:     5,
-			SeasonIds:  []uint64{16036},
+			Stat:      "shots_total",
+			TeamId:    5,
+			SeasonIds: []uint64{16036},
 		}
 
 		ctx := context.Background()
@@ -157,9 +157,9 @@ func TestTeamStatClient_Stats(t *testing.T) {
 		stream := new(mock.TeamStatStream)
 
 		request := proto.TeamStatRequest{
-			Stat:       "shots_total",
-			TeamId:     5,
-			SeasonIds:  []uint64{16036},
+			Stat:      "shots_total",
+			TeamId:    5,
+			SeasonIds: []uint64{16036},
 		}
 
 		ctx := context.Background()

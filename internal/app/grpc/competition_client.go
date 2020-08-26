@@ -19,8 +19,8 @@ type CompetitionClient interface {
 
 type competitionClient struct {
 	competitionClient proto.CompetitionServiceClient
-	seasonClient proto.SeasonServiceClient
-	logger *logrus.Logger
+	seasonClient      proto.SeasonServiceClient
+	logger            *logrus.Logger
 }
 
 func (c *competitionClient) CompetitionsByCountryId(ctx context.Context, countryId uint64) ([]*app.Competition, error) {
@@ -108,7 +108,7 @@ func (c competitionClient) logError(err error) {
 func NewCompetitionClient(c proto.CompetitionServiceClient, s proto.SeasonServiceClient, l *logrus.Logger) CompetitionClient {
 	return &competitionClient{
 		competitionClient: c,
-		seasonClient: s,
-		logger: l,
+		seasonClient:      s,
+		logger:            l,
 	}
 }
