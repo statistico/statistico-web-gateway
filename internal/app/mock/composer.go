@@ -38,7 +38,7 @@ type ResultComposer struct {
 	mock.Mock
 }
 
-func (r *ResultComposer) FetchResults(filters *composer.Filters) ([]*app.Result, error) {
+func (r *ResultComposer) FetchResults(filters *composer.ResultFilters) ([]*app.Result, error) {
 	args := r.Called(filters)
 	return args.Get(0).([]*app.Result), args.Error(1)
 }

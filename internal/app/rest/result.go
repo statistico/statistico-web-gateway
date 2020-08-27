@@ -16,7 +16,7 @@ type ResultHandler struct {
 }
 
 func (h *ResultHandler) Fetch(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	filters := composer.Filters{}
+	filters := composer.ResultFilters{}
 
 	if err := json.NewDecoder(r.Body).Decode(&filters); err != nil {
 		failResponse(

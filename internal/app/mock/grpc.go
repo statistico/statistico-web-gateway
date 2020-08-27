@@ -2,6 +2,7 @@ package mock
 
 import (
 	"context"
+	"github.com/statistico/statistico-web-gateway/internal/app"
 	"github.com/statistico/statistico-web-gateway/internal/app/grpc/proto"
 	"github.com/stretchr/testify/mock"
 	"google.golang.org/grpc"
@@ -101,6 +102,11 @@ type TeamStatClient struct {
 func (t *TeamStatClient) GetStatForTeam(ctx context.Context, in *proto.TeamStatRequest, opts ...grpc.CallOption) (proto.TeamStatsService_GetStatForTeamClient, error) {
 	args := t.Called(ctx, in, opts)
 	return args.Get(0).(proto.TeamStatsService_GetStatForTeamClient), args.Error(1)
+}
+
+func (t *TeamStatClient) Stats(ctx context.Context, req *proto.TeamStatRequest) ([]*app.TeamStat, error) {
+	args := t.Called(ctx, req)
+	return args.Get(0).([]*app.TeamStat), args.Error(1)
 }
 
 type TeamStatStream struct {
