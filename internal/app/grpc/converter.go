@@ -87,8 +87,8 @@ func convertRound(round *proto.Round) (*app.Round, error) {
 
 func convertSeason(season *proto.Season) app.Season {
 	s := app.Season{
-		ID:   season.GetId(),
-		Name: season.GetName(),
+		ID:        season.GetId(),
+		Name:      season.GetName(),
 		IsCurrent: season.GetIsCurrent().GetValue(),
 	}
 
@@ -120,6 +120,19 @@ func convertTeam(team *proto.Team) app.Team {
 	}
 
 	return t
+}
+
+func convertTeamStat(stat *proto.TeamStat) app.TeamStat {
+	s := app.TeamStat{
+		FixtureID: stat.FixtureId,
+		Stat:      stat.Stat,
+	}
+
+	if stat.GetValue() != nil {
+		s.Value = &stat.GetValue().Value
+	}
+
+	return s
 }
 
 func convertVenue(venue *proto.Venue) app.Venue {
