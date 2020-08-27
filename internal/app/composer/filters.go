@@ -26,5 +26,4 @@ type TeamStatFilters struct {
 	Sort       *string     `json:"sort"`
 	Stat       string      `json:"stat"`
 	Team       TeamFilter `json:"team"`
-	Venue      *string     `json:"venue"`
 }

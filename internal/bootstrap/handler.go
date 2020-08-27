@@ -17,3 +17,7 @@ func (c Container) RestSeasonHandler() *rest.SeasonHandler {
 func (c Container) RestTeamHandler() *rest.TeamHandler {
 	return rest.NewTeamHandler(c.TeamComposer())
 }
+
+func (c Container) RestTeamStatHandler() *rest.TeamStatHandler {
+	return rest.NewTeamStatHandler(c.TeamStatComposer())
+}

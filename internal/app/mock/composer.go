@@ -1,6 +1,7 @@
 package mock
 
 import (
+	"context"
 	"github.com/statistico/statistico-web-gateway/internal/app"
 	"github.com/statistico/statistico-web-gateway/internal/app/composer"
 	"github.com/stretchr/testify/mock"
@@ -50,4 +51,13 @@ type SeasonComposer struct {
 func (s *SeasonComposer) ByTeamId(teamId uint64, sort string) ([]*app.Season, error) {
 	args := s.Called(teamId, sort)
 	return args.Get(0).([]*app.Season), args.Error(1)
+}
+
+type TeamStatComposer struct {
+	mock.Mock
+}
+
+func (t *TeamStatComposer) FetchStats(ctx context.Context, filters *composer.TeamStatFilters) ([]*app.TeamStat, error) {
+	args := t.Called(ctx, filters)
+	return args.Get(0).([]*app.TeamStat), args.Error(1)
 }
