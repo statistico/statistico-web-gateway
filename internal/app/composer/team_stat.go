@@ -18,7 +18,7 @@ type teamStatComposer struct {
 }
 
 func (t *teamStatComposer) FetchStats(ctx context.Context, filters *TeamStatFilters) ([]*app.TeamStat, error) {
-	request := proto.TeamStatRequest{TeamId: filters.Team.ID}
+	request := proto.TeamStatRequest{TeamId: filters.Team.ID, Stat: filters.Stat}
 
 	if filters.DateAfter != nil {
 		request.DateAfter = &wrappers.StringValue{Value: filters.DateAfter.Format(time.RFC3339)}

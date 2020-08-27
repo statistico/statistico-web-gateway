@@ -35,7 +35,7 @@ func TestResultHandler_ByTeam(t *testing.T) {
 		before, _ := time.Parse(time.RFC3339, "2020-01-01T00:00:00+00:00")
 		after, _ := time.Parse(time.RFC3339, "2020-01-01T12:00:00+00:00")
 
-		filters := composer.Filters{
+		filters := composer.ResultFilters{
 			Limit:      &limit,
 			DateBefore: &before,
 			DateAfter:  &after,
@@ -74,7 +74,7 @@ func TestResultHandler_ByTeam(t *testing.T) {
 
 		sort := "date_desc"
 
-		filters := composer.Filters{
+		filters := composer.ResultFilters{
 			Sort: &sort,
 			Team: &composer.TeamFilter{ID: 1},
 		}
@@ -106,7 +106,7 @@ func TestResultHandler_ByTeam(t *testing.T) {
 
 		sort := "date_desc"
 
-		filters := composer.Filters{
+		filters := composer.ResultFilters{
 			Sort: &sort,
 			Team: &composer.TeamFilter{ID: 1},
 		}
@@ -134,7 +134,7 @@ func TestResultHandler_ByTeam(t *testing.T) {
 
 		sort := "date_desc"
 
-		filters := composer.Filters{
+		filters := composer.ResultFilters{
 			Sort: &sort,
 			Team: &composer.TeamFilter{ID: 1},
 		}
@@ -162,7 +162,7 @@ func TestResultHandler_ByTeam(t *testing.T) {
 
 		sort := "date_desc"
 
-		filters := composer.Filters{
+		filters := composer.ResultFilters{
 			Sort: &sort,
 			Team: &composer.TeamFilter{ID: 1},
 		}
@@ -190,7 +190,7 @@ func TestResultHandler_ByTeam(t *testing.T) {
 
 		sort := "date_desc"
 
-		filters := composer.Filters{
+		filters := composer.ResultFilters{
 			Sort: &sort,
 			Team: &composer.TeamFilter{ID: 1},
 		}
