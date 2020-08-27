@@ -10,14 +10,14 @@ import (
 )
 
 type ResultComposer interface {
-	FetchResults(filters *Filters) ([]*app.Result, error)
+	FetchResults(filters *ResultFilters) ([]*app.Result, error)
 }
 
 type resultComposer struct {
 	client grpc.ResultClient
 }
 
-func (r resultComposer) FetchResults(filters *Filters) ([]*app.Result, error) {
+func (r resultComposer) FetchResults(filters *ResultFilters) ([]*app.Result, error) {
 	if filters.Team != nil {
 		request := proto.TeamResultRequest{TeamId: filters.Team.ID}
 

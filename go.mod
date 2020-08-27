@@ -1,6 +1,6 @@
 module github.com/statistico/statistico-web-gateway
 
-go 1.12
+go 1.15
 
 require (
 	github.com/golang/protobuf v1.4.2
