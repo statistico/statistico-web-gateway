@@ -17,3 +17,7 @@ func (c Container) SeasonComposer() composer.SeasonComposer {
 func (c Container) TeamComposer() composer.TeamComposer {
 	return composer.NewTeamComposer(c.GRPCTeamClient())
 }
+
+func (c Container) TeamStatComposer() composer.TeamStatComposer {
+	return composer.NewTeamStatComposer(c.GRPCTeamStatClient())
+}

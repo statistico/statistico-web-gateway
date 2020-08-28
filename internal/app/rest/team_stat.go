@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
@@ -9,12 +10,12 @@ import (
 	"net/http"
 )
 
-type ResultHandler struct {
-	composer composer.ResultComposer
+type TeamStatHandler struct {
+	composer composer.TeamStatComposer
 }
 
-func (h *ResultHandler) Fetch(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	filters := composer.ResultFilters{}
+func (h *TeamStatHandler) Fetch(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	filters := composer.TeamStatFilters{}
 
 	if err := json.NewDecoder(r.Body).Decode(&filters); err != nil {
 		failResponse(
@@ -25,26 +26,26 @@ func (h *ResultHandler) Fetch(w http.ResponseWriter, r *http.Request, _ httprout
 		return
 	}
 
-	results, err := h.composer.FetchResults(&filters)
+	stats, err := h.composer.FetchStats(context.Background(), &filters)
 
 	if err != nil {
 		handleError(w, err)
 		return
 	}
 
-	resultsResponse(w, results)
+	teamStatResponse(w, stats)
 }
 
-func resultsResponse(w http.ResponseWriter, results []*app.Result) {
+func teamStatResponse(w http.ResponseWriter, stats []*app.TeamStat) {
 	payload := struct {
-		Results []*app.Result `json:"results"`
+		Stats []*app.TeamStat `json:"stats"`
 	}{}
 
-	payload.Results = results
+	payload.Stats = stats
 
 	successResponse(w, http.StatusOK, payload)
 }
 
-func NewResultHandler(c composer.ResultComposer) *ResultHandler {
-	return &ResultHandler{composer: c}
+func NewTeamStatHandler(c composer.TeamStatComposer) *TeamStatHandler {
+	return &TeamStatHandler{composer: c}
 }

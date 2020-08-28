@@ -9,7 +9,6 @@ type ResultFilters struct {
 	SeasonIds  *[]uint64   `json:"seasonIds"`
 	Sort       *string     `json:"sort"`
 	Team       *TeamFilter `json:"team"`
-	Venue      *string     `json:"venue"`
 }
 
 type TeamFilter struct {
@@ -26,5 +25,4 @@ type TeamStatFilters struct {
 	Sort       *string     `json:"sort"`
 	Stat       string      `json:"stat"`
 	Team       TeamFilter `json:"team"`
-	Venue      *string     `json:"venue"`
 }

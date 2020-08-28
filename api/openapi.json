@@ -321,141 +321,6 @@
         }
       }
     },
-    "/stat-search": {
-      "post": {
-        "tags": [
-          "In development"
-        ],
-        "description": "Get match stat resources for a team",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "dateBefore": {
-                    "$ref": "#/components/schemas/DateRFC3339",
-                    "nullable": true
-                  },
-                  "dateAfter": {
-                    "$ref": "#/components/schemas/DateRFC3339",
-                    "nullable": true
-                  },
-                  "forOpponent": {
-                    "type": "boolean",
-                    "example": false,
-                    "nullable": true
-                  },
-                  "limit": {
-                    "type": "integer",
-                    "example": 10,
-                    "nullable": true
-                  },
-                  "sort": {
-                    "type": "string",
-                    "description": "The date of the fixture",
-                    "enum": [
-                      "date_asc",
-                      "date_desc"
-                    ],
-                    "nullable": true
-                  },
-                  "seasonIds": {
-                    "type": "array",
-                    "items": {
-                      "type": "number"
-                    },
-                    "example": [
-                      16036,
-                      12963
-                    ],
-                    "nullable": true
-                  },
-                  "stat": {
-                    "type": "string",
-                    "enum": [
-                      "attacks_dangerous",
-                      "attacks_total",
-                      "corners",
-                      "fouls",
-                      "goals",
-                      "goal_attempts",
-                      "offsides",
-                      "passes_accuracy",
-                      "passes_percentage",
-                      "passes_total",
-                      "possession",
-                      "red_cards",
-                      "saves",
-                      "shots_blocked",
-                      "shots_inside_box",
-                      "shots_off_goal",
-                      "shots_on_goal",
-                      "shots_outside_box",
-                      "shots_total",
-                      "yellow_cards",
-                      "xG"
-                    ]
-                  },
-                  "team": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "integer",
-                        "example": 56
-                      },
-                      "venue": {
-                        "type": "string",
-                        "enum": [
-                          "home",
-                          "away"
-                        ],
-                        "nullable": true
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "A list of result resources",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "stats": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/TeamMatchStat"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Default non 200 response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StandardResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/season/{id}/teams": {
       "get": {
         "tags": [
@@ -568,7 +433,7 @@
         "tags": [
           "Team"
         ],
-        "description": "Get season reasons associated to a team resource",
+        "description": "Get season resources associated to a team resource",
         "parameters": [
           {
             "name": "id",
@@ -609,6 +474,141 @@
                           "type": "array",
                           "items": {
                             "$ref": "#/components/schemas/Season"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default non 200 response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/team-stat-search": {
+      "post": {
+        "tags": [
+          "Team"
+        ],
+        "description": "Get match stat resources for a team",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dateBefore": {
+                    "$ref": "#/components/schemas/DateRFC3339",
+                    "nullable": true
+                  },
+                  "dateAfter": {
+                    "$ref": "#/components/schemas/DateRFC3339",
+                    "nullable": true
+                  },
+                  "opponent": {
+                    "type": "boolean",
+                    "example": false,
+                    "nullable": true
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "example": 10,
+                    "nullable": true
+                  },
+                  "sort": {
+                    "type": "string",
+                    "description": "The date of the fixture",
+                    "enum": [
+                      "date_asc",
+                      "date_desc"
+                    ],
+                    "nullable": true
+                  },
+                  "seasonIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      16036,
+                      12963
+                    ],
+                    "nullable": true
+                  },
+                  "stat": {
+                    "type": "string",
+                    "enum": [
+                      "attacks_dangerous",
+                      "attacks_total",
+                      "corners",
+                      "fouls",
+                      "goals",
+                      "goal_attempts",
+                      "offsides",
+                      "passes_accuracy",
+                      "passes_percentage",
+                      "passes_total",
+                      "possession",
+                      "red_cards",
+                      "saves",
+                      "shots_blocked",
+                      "shots_inside_box",
+                      "shots_off_goal",
+                      "shots_on_goal",
+                      "shots_outside_box",
+                      "shots_total",
+                      "yellow_cards",
+                      "xG"
+                    ]
+                  },
+                  "team": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "example": 56
+                      },
+                      "venue": {
+                        "type": "string",
+                        "enum": [
+                          "home",
+                          "away"
+                        ],
+                        "nullable": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A list of result resources",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "stats": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/TeamMatchStat"
                           }
                         }
                       }

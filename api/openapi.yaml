@@ -203,7 +203,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/StandardResponse'
 
-  /stat-search:
+  /team-stat-search:
     post:
       tags:
         - In development
@@ -220,7 +220,7 @@ paths:
                 dateAfter:
                   $ref: '#/components/schemas/DateRFC3339'
                   nullable: true
-                forOpponent:
+                opponent:
                   type: boolean
                   example: false
                   nullable: true
@@ -371,7 +371,7 @@ paths:
     get:
       tags:
         - Team
-      description: Get season reasons associated to a team resource
+      description: Get season resources associated to a team resource
       parameters:
         - name: id
           in: path
