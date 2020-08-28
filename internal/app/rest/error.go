@@ -2,7 +2,9 @@ package rest
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	e "github.com/statistico/statistico-web-gateway/internal/app/errors"
 	"net/http"
 )
 
@@ -17,4 +19,18 @@ func parseJsonError(e error) (int, error) {
 	}
 
 	return http.StatusBadRequest, e
+}
+
+func handleError(w http.ResponseWriter, err error) {
+	if err == e.ErrorInternalServerError {
+		errorResponse(w, http.StatusInternalServerError, errors.New("internal server error"))
+		return
+	}
+
+	if err == e.ErrorBadGateway {
+		errorResponse(w, http.StatusBadGateway, errors.New("bad gateway"))
+		return
+	}
+
+	failResponse(w, http.StatusUnprocessableEntity, err)
 }

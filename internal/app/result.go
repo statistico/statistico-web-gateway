@@ -5,7 +5,7 @@ type Result struct {
 	HomeTeam Team        `json:"homeTeam"`
 	AwayTeam Team        `json:"awayTeam"`
 	Season   Season      `json:"season"`
-	Round    Round       `json:"round"`
+	Round    *Round      `json:"round"`
 	Venue    Venue       `json:"venue"`
 	DateTime JsonDate    `json:"date"`
 	Stats    ResultStats `json:"stats"`

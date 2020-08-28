@@ -9,6 +9,7 @@ import (
 
 type TeamComposer interface {
 	TeamById(id uint64) (*app.Team, error)
+	TeamsBySeasonId(seasonId uint64) ([]*app.Team, error)
 }
 
 type teamComposer struct {
@@ -19,6 +20,10 @@ func (t teamComposer) TeamById(id uint64) (*app.Team, error) {
 	request := &proto.TeamRequest{TeamId: id}
 
 	return t.client.TeamById(context.Background(), request)
+}
+
+func (t teamComposer) TeamsBySeasonId(seasonId uint64) ([]*app.Team, error) {
+	return t.client.TeamsBySeasonId(context.Background(), seasonId)
 }
 
 func NewTeamComposer(c grpc.TeamClient) TeamComposer {

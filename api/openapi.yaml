@@ -5,6 +5,85 @@ info:
 servers:
   - url: https://api.statistico.io
 paths:
+  /country/{id}/competitions:
+    get:
+      tags:
+        - Country
+      description: Get competition resources
+      parameters:
+        - name: id
+          in: path
+          description: ID of country resource
+          required: true
+          schema:
+            type: number
+            example: 462
+      responses:
+        200:
+          description: The team resource
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      competitions:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Competition'
+        default:
+          description: Default non 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+
+  /competition/{id}/seasons:
+    get:
+      tags:
+        - Competition
+      description: Get season resources associated to a competition resource
+      parameters:
+        - name: id
+          in: path
+          description: The competition resource ID
+          required: true
+          schema:
+            type: string
+            example: 8
+        - name: sort
+          in: query
+          description: Sort resources by ID
+          required: false
+          schema:
+            type: string
+            enum:
+              - name_asc
+              - name_desc
+      responses:
+        200:
+          description: The team resource
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      seasons:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Season'
+        default:
+          description: Default non 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+
   /fixture-search:
     post:
       tags:
@@ -57,6 +136,204 @@ paths:
               schema:
                 $ref: '#/components/schemas/StandardResponse'
 
+  /result-search:
+    post:
+      tags:
+        - Team
+      description: Get result resources
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dateBefore:
+                  $ref: '#/components/schemas/DateRFC3339'
+                  nullable: true
+                dateAfter:
+                  $ref: '#/components/schemas/DateRFC3339'
+                  nullable: true
+                limit:
+                  type: integer
+                  example: 10
+                  nullable: true
+                sort:
+                  type: string
+                  enum:
+                    - date_asc
+                    - date_desc
+                  nullable: true
+                seasonIds:
+                  type: array
+                  items:
+                    type: number
+                  example: [16036, 12963]
+                  nullable: true
+                team:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 56
+                    venue:
+                      type: string
+                      enum:
+                        - home
+                        - away
+                      nullable: true
+      responses:
+        200:
+          description: A list of result resources
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Result'
+        default:
+          description: Default non 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+
+  /team-stat-search:
+    post:
+      tags:
+        - In development
+      description: Get match stat resources for a team
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dateBefore:
+                  $ref: '#/components/schemas/DateRFC3339'
+                  nullable: true
+                dateAfter:
+                  $ref: '#/components/schemas/DateRFC3339'
+                  nullable: true
+                opponent:
+                  type: boolean
+                  example: false
+                  nullable: true
+                limit:
+                  type: integer
+                  example: 10
+                  nullable: true
+                sort:
+                  type: string
+                  description: The date of the fixture
+                  enum:
+                    - date_asc
+                    - date_desc
+                  nullable: true
+                seasonIds:
+                  type: array
+                  items:
+                    type: number
+                  example: [16036, 12963]
+                  nullable: true
+                stat:
+                  type: string
+                  enum:
+                    - attacks_dangerous
+                    - attacks_total
+                    - corners
+                    - fouls
+                    - goals
+                    - goal_attempts
+                    - offsides
+                    - passes_accuracy
+                    - passes_percentage
+                    - passes_total
+                    - possession
+                    - red_cards
+                    - saves
+                    - shots_blocked
+                    - shots_inside_box
+                    - shots_off_goal
+                    - shots_on_goal
+                    - shots_outside_box
+                    - shots_total
+                    - yellow_cards
+                    - xG
+                team:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 56
+                    venue:
+                      type: string
+                      enum:
+                        - home
+                        - away
+                      nullable: true
+      responses:
+        200:
+          description: A list of result resources
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      stats:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/TeamMatchStat'
+        default:
+          description: Default non 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+
+  /season/{id}/teams:
+    get:
+      tags:
+        - Season
+      description: Get team resources associated to a season resource
+      parameters:
+        - name: id
+          in: path
+          description: The competition resource ID
+          required: true
+          schema:
+            type: string
+            example: 16036
+      responses:
+        200:
+          description: The team resource
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      teams:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Team'
+        default:
+          description: Default non 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+
   /team/{id}:
     get:
       tags:
@@ -90,11 +367,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/StandardResponse'
 
-  /team/{id}/results:
-    post:
+  /team/{id}/seasons:
+    get:
       tags:
         - Team
-      description: Get result resources for a team
+      description: Get season resources associated to a team resource
       parameters:
         - name: id
           in: path
@@ -103,41 +380,18 @@ paths:
           schema:
             type: string
             example: 1
-        - name: dateAfter
-          in: query
-          description: Return results after given date
-          schema:
-            $ref: '#/components/schemas/DateRFC3339'
-        - name: dateBefore
-          in: query
-          description: Return results before given date
-          schema:
-              $ref: '#/components/schemas/DateRFC3339'
-        - name: limit
-          in: query
-          description: Limit the result set
-          schema:
-            type: integer
-            example: 10
         - name: sort
           in: query
-          description: Sort the result by in a specific order
+          description: Sort resources by season name
+          required: false
           schema:
             type: string
             enum:
-              - date_asc
-              - date_desc
-        - name: venue
-          in: query
-          description: Limit the result set based on venue match was played
-          schema:
-            type: string
-            enum:
-              - home
-              - away
+              - name_asc
+              - name_desc
       responses:
         200:
-          description: A list of result resources
+          description: An array of season resources
           content:
             application/json:
               schema:
@@ -146,10 +400,10 @@ paths:
                   data:
                     type: object
                     properties:
-                      results:
+                      seasons:
                         type: array
                         items:
-                          $ref: '#/components/schemas/Result'
+                          $ref: '#/components/schemas/Season'
         default:
           description: Default non 200 response
           content:
@@ -171,6 +425,9 @@ components:
         isCup:
           type: boolean
           example: false
+        countryId:
+          type: integer
+          example: 462
 
     DateRFC3339:
       type: string
@@ -375,6 +632,16 @@ components:
           type: string
           example: https://logo.com/1.png
           nullable: true
+
+    TeamMatchStat:
+      type: object
+      properties:
+        fixtureId:
+          type: integer
+          example: 16918
+        value:
+          type: integer
+          example: 2
 
     Venue:
       type: object
