@@ -2,7 +2,6 @@ package rest
 
 import (
 	"errors"
-	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"github.com/statistico/statistico-web-gateway/internal/app"
 	"github.com/statistico/statistico-web-gateway/internal/app/composer"
@@ -65,10 +64,6 @@ func (t *TeamHandler) TeamsBySeasonId(w http.ResponseWriter, _ *http.Request, ps
 
 func NewTeamHandler(c composer.TeamComposer) *TeamHandler {
 	return &TeamHandler{c}
-}
-
-func notFoundResponse(w http.ResponseWriter, id string) {
-	failResponse(w, http.StatusNotFound, errors.New(fmt.Sprintf("team with id '%s' does not exist", id)))
 }
 
 func teamResponse(w http.ResponseWriter, team *app.Team) {

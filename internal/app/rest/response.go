@@ -2,6 +2,8 @@ package rest
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"net/http"
 )
 
@@ -58,4 +60,8 @@ func errorResponse(w http.ResponseWriter, status int, error error) {
 	}
 
 	jsonResponse(w, status, response)
+}
+
+func notFoundResponse(w http.ResponseWriter, id string) {
+	failResponse(w, http.StatusNotFound, errors.New(fmt.Sprintf("team with id '%s' does not exist", id)))
 }
