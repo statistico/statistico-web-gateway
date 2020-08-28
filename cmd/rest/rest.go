@@ -23,6 +23,7 @@ func main() {
 	router.GET("/season/:id/teams", container.RestTeamHandler().TeamsBySeasonId)
 	router.GET("/team/:id", container.RestTeamHandler().TeamById)
 	router.GET("/team/:id/seasons", container.RestSeasonHandler().ByTeamId)
+	router.POST("/team-stat-search", container.RestTeamStatHandler().Fetch)
 
 	server := rest.MiddlewarePipe(
 		router,
