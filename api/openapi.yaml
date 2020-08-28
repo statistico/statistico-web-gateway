@@ -371,7 +371,7 @@ paths:
     get:
       tags:
         - Team
-      description: Get season reasons associated to a team resource
+      description: Get season resources associated to a team resource
       parameters:
         - name: id
           in: path
