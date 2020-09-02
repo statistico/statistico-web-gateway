@@ -31,6 +31,10 @@ message HistoricalResultRequest {
   string date_before = 4;
 }
 
+message ResultRequest {
+  uint64 fixture_id = 1;
+}
+
 message SeasonFixtureRequest {
   uint64 season_id = 1;
   // RFC3339 formatted string i.e. "2006-01-02T15:04:05Z07:00"
