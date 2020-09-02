@@ -516,6 +516,15 @@
                     "$ref": "#/components/schemas/DateRFC3339",
                     "nullable": true
                   },
+                  "include": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "result"
+                      ]
+                    }
+                  },
                   "opponent": {
                     "type": "boolean",
                     "example": false,
@@ -547,30 +556,7 @@
                     "nullable": true
                   },
                   "stat": {
-                    "type": "string",
-                    "enum": [
-                      "attacks_dangerous",
-                      "attacks_total",
-                      "corners",
-                      "fouls",
-                      "goals",
-                      "goal_attempts",
-                      "offsides",
-                      "passes_accuracy",
-                      "passes_percentage",
-                      "passes_total",
-                      "possession",
-                      "red_cards",
-                      "saves",
-                      "shots_blocked",
-                      "shots_inside_box",
-                      "shots_off_goal",
-                      "shots_on_goal",
-                      "shots_outside_box",
-                      "shots_total",
-                      "yellow_cards",
-                      "xG"
-                    ]
+                    "$ref": "#/components/schemas/TeamStatEnum"
                   },
                   "team": {
                     "type": "object",
@@ -922,12 +908,45 @@
           }
         }
       },
+      "TeamStatEnum": {
+        "type": "string",
+        "enum": [
+          "attacks_dangerous",
+          "attacks_total",
+          "corners",
+          "fouls",
+          "goals",
+          "goal_attempts",
+          "offsides",
+          "passes_accuracy",
+          "passes_percentage",
+          "passes_total",
+          "possession",
+          "red_cards",
+          "saves",
+          "shots_blocked",
+          "shots_inside_box",
+          "shots_off_goal",
+          "shots_on_goal",
+          "shots_outside_box",
+          "shots_total",
+          "yellow_cards",
+          "xG"
+        ]
+      },
       "TeamMatchStat": {
         "type": "object",
         "properties": {
           "fixtureId": {
             "type": "integer",
             "example": 16918
+          },
+          "stat": {
+            "$ref": "#/components/schemas/TeamStatEnum"
+          },
+          "result": {
+            "$ref": "#/components/schemas/Result",
+            "nullable": true
           },
           "value": {
             "type": "integer",

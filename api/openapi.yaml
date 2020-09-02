@@ -3,9 +3,9 @@ info:
   title: Statistico Web API
   version: 1.0.0
 servers:
-  - url: https://api.statistico.io
+  - url: 'https://api.statistico.io'
 paths:
-  /country/{id}/competitions:
+  '/country/{id}/competitions':
     get:
       tags:
         - Country
@@ -19,7 +19,7 @@ paths:
             type: number
             example: 462
       responses:
-        200:
+        '200':
           description: The team resource
           content:
             application/json:
@@ -39,8 +39,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StandardResponse'
-
-  /competition/{id}/seasons:
+  '/competition/{id}/seasons':
     get:
       tags:
         - Competition
@@ -63,7 +62,7 @@ paths:
               - name_asc
               - name_desc
       responses:
-        200:
+        '200':
           description: The team resource
           content:
             application/json:
@@ -83,7 +82,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StandardResponse'
-
   /fixture-search:
     post:
       tags:
@@ -99,7 +97,9 @@ paths:
                   type: array
                   items:
                     type: integer
-                  example: [16203, 340]
+                  example:
+                    - 16203
+                    - 340
                 dateRange:
                   type: object
                   properties:
@@ -112,7 +112,7 @@ paths:
                   items:
                     $ref: '#/components/schemas/FixtureStatFilter'
       responses:
-        200:
+        '200':
           description: A list of fixture resources matching filters
           content:
             application/json:
@@ -121,7 +121,7 @@ paths:
                 properties:
                   status:
                     type: string
-                    example: 'success'
+                    example: success
                   data:
                     type: object
                     properties:
@@ -135,7 +135,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StandardResponse'
-
   /result-search:
     post:
       tags:
@@ -167,7 +166,9 @@ paths:
                   type: array
                   items:
                     type: number
-                  example: [16036, 12963]
+                  example:
+                    - 16036
+                    - 12963
                   nullable: true
                 team:
                   type: object
@@ -182,7 +183,7 @@ paths:
                         - away
                       nullable: true
       responses:
-        200:
+        '200':
           description: A list of result resources
           content:
             application/json:
@@ -202,104 +203,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StandardResponse'
-
-  /team-stat-search:
-    post:
-      tags:
-        - In development
-      description: Get match stat resources for a team
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                dateBefore:
-                  $ref: '#/components/schemas/DateRFC3339'
-                  nullable: true
-                dateAfter:
-                  $ref: '#/components/schemas/DateRFC3339'
-                  nullable: true
-                opponent:
-                  type: boolean
-                  example: false
-                  nullable: true
-                limit:
-                  type: integer
-                  example: 10
-                  nullable: true
-                sort:
-                  type: string
-                  description: The date of the fixture
-                  enum:
-                    - date_asc
-                    - date_desc
-                  nullable: true
-                seasonIds:
-                  type: array
-                  items:
-                    type: number
-                  example: [16036, 12963]
-                  nullable: true
-                stat:
-                  type: string
-                  enum:
-                    - attacks_dangerous
-                    - attacks_total
-                    - corners
-                    - fouls
-                    - goals
-                    - goal_attempts
-                    - offsides
-                    - passes_accuracy
-                    - passes_percentage
-                    - passes_total
-                    - possession
-                    - red_cards
-                    - saves
-                    - shots_blocked
-                    - shots_inside_box
-                    - shots_off_goal
-                    - shots_on_goal
-                    - shots_outside_box
-                    - shots_total
-                    - yellow_cards
-                    - xG
-                team:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      example: 56
-                    venue:
-                      type: string
-                      enum:
-                        - home
-                        - away
-                      nullable: true
-      responses:
-        200:
-          description: A list of result resources
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      stats:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/TeamMatchStat'
-        default:
-          description: Default non 200 response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StandardResponse'
-
-  /season/{id}/teams:
+  '/season/{id}/teams':
     get:
       tags:
         - Season
@@ -313,7 +217,7 @@ paths:
             type: string
             example: 16036
       responses:
-        200:
+        '200':
           description: The team resource
           content:
             application/json:
@@ -333,8 +237,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StandardResponse'
-
-  /team/{id}:
+  '/team/{id}':
     get:
       tags:
         - Team
@@ -348,7 +251,7 @@ paths:
             type: string
             example: 1
       responses:
-        200:
+        '200':
           description: The team resource
           content:
             application/json:
@@ -366,8 +269,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StandardResponse'
-
-  /team/{id}/seasons:
+  '/team/{id}/seasons':
     get:
       tags:
         - Team
@@ -390,7 +292,7 @@ paths:
               - name_asc
               - name_desc
       responses:
-        200:
+        '200':
           description: An array of season resources
           content:
             application/json:
@@ -410,7 +312,87 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StandardResponse'
-
+  /team-stat-search:
+    post:
+      tags:
+        - Team
+      description: Get match stat resources for a team
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dateBefore:
+                  $ref: '#/components/schemas/DateRFC3339'
+                  nullable: true
+                dateAfter:
+                  $ref: '#/components/schemas/DateRFC3339'
+                  nullable: true
+                include:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - result
+                opponent:
+                  type: boolean
+                  example: false
+                  nullable: true
+                limit:
+                  type: integer
+                  example: 10
+                  nullable: true
+                sort:
+                  type: string
+                  description: The date of the fixture
+                  enum:
+                    - date_asc
+                    - date_desc
+                  nullable: true
+                seasonIds:
+                  type: array
+                  items:
+                    type: number
+                  example:
+                    - 16036
+                    - 12963
+                  nullable: true
+                stat:
+                  $ref: '#/components/schemas/TeamStatEnum'
+                team:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 56
+                    venue:
+                      type: string
+                      enum:
+                        - home
+                        - away
+                      nullable: true
+      responses:
+        '200':
+          description: A list of result resources
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      stats:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/TeamMatchStat'
+        default:
+          description: Default non 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
 components:
   schemas:
     Competition:
@@ -428,12 +410,10 @@ components:
         countryId:
           type: integer
           example: 462
-
     DateRFC3339:
       type: string
-      description: "An RFC-3339 valid datetime"
+      description: An RFC-3339 valid datetime
       example: '2018-01-24T20:21:44+00:00'
-
     Error:
       type: object
       required:
@@ -450,7 +430,6 @@ components:
           description: >
             A code to identify the error. "1" is used when no specific error
             code has been defined for this error
-
     Fixture:
       type: object
       properties:
@@ -471,7 +450,6 @@ components:
           $ref: '#/components/schemas/Round'
         date:
           $ref: '#/components/schemas/DateRFC3339'
-
     FixtureStatFilter:
       type: object
       properties:
@@ -510,7 +488,9 @@ components:
             - lte
         value:
           type: number
-          description: The value associated to the filter type i.e. more than 2 goals scored
+          description: >-
+            The value associated to the filter type i.e. more than 2 goals
+            scored
           example: 2.75
         venue:
           type: string
@@ -523,7 +503,6 @@ components:
           type: integer
           description: The number of previous game to perform calculations from
           example: 5
-
     Result:
       type: object
       properties:
@@ -551,7 +530,6 @@ components:
             awayScore:
               type: integer
               example: 1
-
     Round:
       type: object
       properties:
@@ -560,7 +538,7 @@ components:
           example: 6715
         name:
           type: string
-          example: "5"
+          example: '5'
         seasonId:
           type: integer
           example: 452
@@ -568,7 +546,6 @@ components:
           $ref: '#/components/schemas/DateRFC3339'
         endDate:
           $ref: '#/components/schemas/DateRFC3339'
-
     Season:
       type: object
       properties:
@@ -581,7 +558,6 @@ components:
         isCurrent:
           type: boolean
           example: false
-
     StandardResponse:
       type: object
       required:
@@ -601,7 +577,6 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/Error'
-
     Team:
       type: object
       properties:
@@ -610,10 +585,10 @@ components:
           example: 1
         name:
           type: string
-          example: "West Ham United"
+          example: West Ham United
         shortCode:
           type: string
-          example: "WHU"
+          example: WHU
           nullable: true
         countryId:
           type: integer
@@ -630,8 +605,33 @@ components:
           nullable: true
         logo:
           type: string
-          example: https://logo.com/1.png
+          example: 'https://logo.com/1.png'
           nullable: true
+
+    TeamStatEnum:
+      type: string
+      enum:
+        - attacks_dangerous
+        - attacks_total
+        - corners
+        - fouls
+        - goals
+        - goal_attempts
+        - offsides
+        - passes_accuracy
+        - passes_percentage
+        - passes_total
+        - possession
+        - red_cards
+        - saves
+        - shots_blocked
+        - shots_inside_box
+        - shots_off_goal
+        - shots_on_goal
+        - shots_outside_box
+        - shots_total
+        - yellow_cards
+        - xG
 
     TeamMatchStat:
       type: object
@@ -639,10 +639,14 @@ components:
         fixtureId:
           type: integer
           example: 16918
+        stat:
+          $ref: '#/components/schemas/TeamStatEnum'
+        result:
+          $ref: '#/components/schemas/Result'
+          nullable: true
         value:
           type: integer
           example: 2
-
     Venue:
       type: object
       properties:
@@ -651,4 +655,4 @@ components:
           example: 1
         name:
           type: string
-          example: "London Stadium"
+          example: London Stadium
