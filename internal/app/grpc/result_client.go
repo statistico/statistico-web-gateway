@@ -12,12 +12,43 @@ import (
 )
 
 type ResultClient interface {
+	ByID(ctx context.Context, fixtureID uint64) (*app.Result, error)
 	ByTeam(ctx context.Context, req *proto.TeamResultRequest) ([]*app.Result, error)
 }
 
 type resultClient struct {
 	client proto.ResultServiceClient
 	logger *logrus.Logger
+}
+
+func (r resultClient) ByID(ctx context.Context, fixtureID uint64) (*app.Result, error) {
+	request := proto.ResultRequest{FixtureId: fixtureID}
+
+	result, err := r.client.GetById(ctx, &request)
+
+	if err != nil {
+		if e, ok := status.FromError(err); ok {
+			switch e.Code() {
+			case codes.NotFound:
+				return nil, errors.ErrorNotFound
+			case codes.Internal:
+				r.logError(err)
+				return nil, errors.ErrorInternalServerError
+			default:
+				r.logError(err)
+				return nil, errors.ErrorBadGateway
+			}
+		}
+	}
+
+	converted, err := convertResult(result)
+
+	if err != nil {
+		r.logError(err)
+		return nil, errors.ErrorInternalServerError
+	}
+
+	return converted, nil
 }
 
 func (r resultClient) ByTeam(ctx context.Context, req *proto.TeamResultRequest) ([]*app.Result, error) {
