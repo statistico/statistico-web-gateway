@@ -408,14 +408,17 @@ var file_internal_app_grpc_proto_result_proto_rawDesc = []byte{
 	0x74, 0x69, 0x6d, 0x65, 0x18, 0x11, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x67, 0x6f, 0x6f,
 	0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x55, 0x49, 0x6e,
 	0x74, 0x33, 0x32, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x52, 0x0a, 0x69, 0x6e, 0x6a, 0x75, 0x72, 0x79,
-	0x54, 0x69, 0x6d, 0x65, 0x32, 0x51, 0x0a, 0x0d, 0x52, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x53, 0x65,
-	0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x40, 0x0a, 0x11, 0x47, 0x65, 0x74, 0x52, 0x65, 0x73, 0x75,
-	0x6c, 0x74, 0x73, 0x46, 0x6f, 0x72, 0x54, 0x65, 0x61, 0x6d, 0x12, 0x18, 0x2e, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x2e, 0x54, 0x65, 0x61, 0x6d, 0x52, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x52, 0x65, 0x71,
-	0x75, 0x65, 0x73, 0x74, 0x1a, 0x0d, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x52, 0x65, 0x73,
-	0x75, 0x6c, 0x74, 0x22, 0x00, 0x30, 0x01, 0x42, 0x19, 0x5a, 0x17, 0x69, 0x6e, 0x74, 0x65, 0x72,
-	0x6e, 0x61, 0x6c, 0x2f, 0x61, 0x70, 0x70, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2f, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x54, 0x69, 0x6d, 0x65, 0x32, 0x83, 0x01, 0x0a, 0x0d, 0x52, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x53,
+	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x30, 0x0a, 0x07, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49,
+	0x64, 0x12, 0x14, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x52, 0x65, 0x73, 0x75, 0x6c, 0x74,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x0d, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e,
+	0x52, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x22, 0x00, 0x12, 0x40, 0x0a, 0x11, 0x47, 0x65, 0x74, 0x52,
+	0x65, 0x73, 0x75, 0x6c, 0x74, 0x73, 0x46, 0x6f, 0x72, 0x54, 0x65, 0x61, 0x6d, 0x12, 0x18, 0x2e,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x54, 0x65, 0x61, 0x6d, 0x52, 0x65, 0x73, 0x75, 0x6c, 0x74,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x0d, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e,
+	0x52, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x22, 0x00, 0x30, 0x01, 0x42, 0x19, 0x5a, 0x17, 0x69, 0x6e,
+	0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x61, 0x70, 0x70, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2f,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -441,7 +444,8 @@ var file_internal_app_grpc_proto_result_proto_goTypes = []interface{}{
 	(*Date)(nil),                 // 6: proto.Date
 	(*wrappers.StringValue)(nil), // 7: google.protobuf.StringValue
 	(*wrappers.UInt32Value)(nil), // 8: google.protobuf.UInt32Value
-	(*TeamResultRequest)(nil),    // 9: proto.TeamResultRequest
+	(*ResultRequest)(nil),        // 9: proto.ResultRequest
+	(*TeamResultRequest)(nil),    // 10: proto.TeamResultRequest
 }
 var file_internal_app_grpc_proto_result_proto_depIdxs = []int32{
 	2,  // 0: proto.Result.home_team:type_name -> proto.Team
@@ -467,10 +471,12 @@ var file_internal_app_grpc_proto_result_proto_depIdxs = []int32{
 	8,  // 20: proto.MatchStats.added_time:type_name -> google.protobuf.UInt32Value
 	8,  // 21: proto.MatchStats.extra_time:type_name -> google.protobuf.UInt32Value
 	8,  // 22: proto.MatchStats.injury_time:type_name -> google.protobuf.UInt32Value
-	9,  // 23: proto.ResultService.GetResultsForTeam:input_type -> proto.TeamResultRequest
-	0,  // 24: proto.ResultService.GetResultsForTeam:output_type -> proto.Result
-	24, // [24:25] is the sub-list for method output_type
-	23, // [23:24] is the sub-list for method input_type
+	9,  // 23: proto.ResultService.GetById:input_type -> proto.ResultRequest
+	10, // 24: proto.ResultService.GetResultsForTeam:input_type -> proto.TeamResultRequest
+	0,  // 25: proto.ResultService.GetById:output_type -> proto.Result
+	0,  // 26: proto.ResultService.GetResultsForTeam:output_type -> proto.Result
+	25, // [25:27] is the sub-list for method output_type
+	23, // [23:25] is the sub-list for method input_type
 	23, // [23:23] is the sub-list for extension type_name
 	23, // [23:23] is the sub-list for extension extendee
 	0,  // [0:23] is the sub-list for field type_name
@@ -545,6 +551,7 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ResultServiceClient interface {
+	GetById(ctx context.Context, in *ResultRequest, opts ...grpc.CallOption) (*Result, error)
 	GetResultsForTeam(ctx context.Context, in *TeamResultRequest, opts ...grpc.CallOption) (ResultService_GetResultsForTeamClient, error)
 }
 
@@ -554,6 +561,15 @@ type resultServiceClient struct {
 
 func NewResultServiceClient(cc grpc.ClientConnInterface) ResultServiceClient {
 	return &resultServiceClient{cc}
+}
+
+func (c *resultServiceClient) GetById(ctx context.Context, in *ResultRequest, opts ...grpc.CallOption) (*Result, error) {
+	out := new(Result)
+	err := c.cc.Invoke(ctx, "/proto.ResultService/GetById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *resultServiceClient) GetResultsForTeam(ctx context.Context, in *TeamResultRequest, opts ...grpc.CallOption) (ResultService_GetResultsForTeamClient, error) {
@@ -590,6 +606,7 @@ func (x *resultServiceGetResultsForTeamClient) Recv() (*Result, error) {
 
 // ResultServiceServer is the server API for ResultService service.
 type ResultServiceServer interface {
+	GetById(context.Context, *ResultRequest) (*Result, error)
 	GetResultsForTeam(*TeamResultRequest, ResultService_GetResultsForTeamServer) error
 }
 
@@ -597,12 +614,33 @@ type ResultServiceServer interface {
 type UnimplementedResultServiceServer struct {
 }
 
+func (*UnimplementedResultServiceServer) GetById(context.Context, *ResultRequest) (*Result, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetById not implemented")
+}
 func (*UnimplementedResultServiceServer) GetResultsForTeam(*TeamResultRequest, ResultService_GetResultsForTeamServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetResultsForTeam not implemented")
 }
 
 func RegisterResultServiceServer(s *grpc.Server, srv ResultServiceServer) {
 	s.RegisterService(&_ResultService_serviceDesc, srv)
+}
+
+func _ResultService_GetById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResultRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ResultServiceServer).GetById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.ResultService/GetById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ResultServiceServer).GetById(ctx, req.(*ResultRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _ResultService_GetResultsForTeam_Handler(srv interface{}, stream grpc.ServerStream) error {
@@ -629,7 +667,12 @@ func (x *resultServiceGetResultsForTeamServer) Send(m *Result) error {
 var _ResultService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "proto.ResultService",
 	HandlerType: (*ResultServiceServer)(nil),
-	Methods:     []grpc.MethodDesc{},
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetById",
+			Handler:    _ResultService_GetById_Handler,
+		},
+	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "GetResultsForTeam",

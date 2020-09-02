@@ -84,6 +84,11 @@ func (t *ResultClient) GetResultsForTeam(ctx context.Context, in *proto.TeamResu
 	return args.Get(0).(proto.ResultService_GetResultsForTeamClient), args.Error(1)
 }
 
+func (t *ResultClient) GetById(ctx context.Context, in *proto.ResultRequest, opts ...grpc.CallOption) (*proto.Result, error) {
+	args := t.Called(ctx, in, opts)
+	return args.Get(0).(*proto.Result), args.Error(1)
+}
+
 type ResultStream struct {
 	mock.Mock
 	grpc.ClientStream
