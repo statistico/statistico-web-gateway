@@ -64,6 +64,7 @@ func (t *teamStatClient) streamStats(stream proto.TeamStatsService_GetStatForTea
 			default:
 				t.logError(err)
 				errChan <- errors.ErrorInternalServerError
+				break
 			}
 
 			close(ch)
