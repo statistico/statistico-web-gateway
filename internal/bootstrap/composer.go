@@ -19,5 +19,5 @@ func (c Container) TeamComposer() composer.TeamComposer {
 }
 
 func (c Container) TeamStatComposer() composer.TeamStatComposer {
-	return composer.NewTeamStatComposer(c.GRPCTeamStatClient())
+	return composer.NewTeamStatComposer(c.GRPCTeamStatClient(), c.GRPCResultClient())
 }

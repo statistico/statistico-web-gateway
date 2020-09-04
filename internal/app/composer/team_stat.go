@@ -15,6 +15,7 @@ type TeamStatComposer interface {
 
 type teamStatComposer struct {
 	client grpc.TeamStatClient
+	resultClient grpc.ResultClient
 }
 
 func (t *teamStatComposer) FetchStats(ctx context.Context, filters *TeamStatFilters) ([]*app.TeamStat, error) {
@@ -48,9 +49,36 @@ func (t *teamStatComposer) FetchStats(ctx context.Context, filters *TeamStatFilt
 		request.Venue = &wrappers.StringValue{Value: *filters.Team.Venue}
 	}
 
-	return t.client.Stats(ctx, &request)
+	stats := []*app.TeamStat{}
+
+	statChan, errChan := t.client.Stats(ctx, &request)
+
+	for stat := range statChan {
+		if filters.IncludesParameter("result") {
+			stat.Result = t.parseAssociatedResult(ctx, stat, errChan)
+		}
+
+		stats = append(stats, stat)
+	}
+
+	for err := range errChan {
+		return stats, err
+	}
+
+	return stats, nil
 }
 
-func NewTeamStatComposer(c grpc.TeamStatClient) TeamStatComposer {
-	return &teamStatComposer{client: c}
+func (t *teamStatComposer) parseAssociatedResult(ctx context.Context, stat *app.TeamStat, errChan chan error) *app.Result {
+	result, err := t.resultClient.ByID(ctx, stat.FixtureID)
+
+	if err != nil {
+		errChan <- err
+		return nil
+	}
+
+	return result
+}
+
+func NewTeamStatComposer(c grpc.TeamStatClient, r grpc.ResultClient) TeamStatComposer {
+	return &teamStatComposer{client: c, resultClient: r}
 }

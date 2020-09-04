@@ -12,7 +12,7 @@ import (
 )
 
 type TeamStatClient interface {
-	Stats(ctx context.Context, req *proto.TeamStatRequest) ([]*app.TeamStat, error)
+	Stats(ctx context.Context, req *proto.TeamStatRequest) (<-chan *app.TeamStat, chan error)
 }
 
 type teamStatClient struct {
@@ -20,44 +20,59 @@ type teamStatClient struct {
 	logger *logrus.Logger
 }
 
-func (t *teamStatClient) Stats(ctx context.Context, req *proto.TeamStatRequest) ([]*app.TeamStat, error) {
-	stats := []*app.TeamStat{}
+func (t *teamStatClient) Stats(ctx context.Context, req *proto.TeamStatRequest) (<-chan *app.TeamStat, chan error) {
+	stats := make(chan *app.TeamStat)
+	errChan := make(chan error, 1)
 
 	stream, err := t.client.GetStatForTeam(ctx, req)
 
 	if err != nil {
+		defer close(stats)
+		defer close(errChan)
+
 		if e, ok := status.FromError(err); ok {
 			switch e.Code() {
 			case codes.InvalidArgument:
-				return stats, err
+				errChan <- err
+				break
 			case codes.Internal:
 				t.logError(err)
-				return stats, errors.ErrorInternalServerError
+				errChan <- errors.ErrorInternalServerError
+				break
 			default:
 				t.logError(err)
-				return stats, errors.ErrorBadGateway
+				errChan <- errors.ErrorBadGateway
 			}
 		}
+
+		return stats, errChan
 	}
 
+	go t.streamStats(stream, stats, errChan)
+
+	return stats, errChan
+}
+
+func (t *teamStatClient) streamStats(stream proto.TeamStatsService_GetStatForTeamClient, ch chan<- *app.TeamStat, errChan chan<- error) {
 	for {
 		stat, err := stream.Recv()
 
-		if err == io.EOF {
-			break
-		}
-
 		if err != nil {
-			t.logError(err)
-			return stats, errors.ErrorInternalServerError
+			switch err {
+			case io.EOF:
+				break
+			default:
+				t.logError(err)
+				errChan <- errors.ErrorInternalServerError
+			}
+
+			close(ch)
+			close(errChan)
+			return
 		}
 
-		st := convertTeamStat(stat)
-
-		stats = append(stats, &st)
+		ch <- convertTeamStat(stat)
 	}
-
-	return stats, nil
 }
 
 func (t *teamStatClient) logError(err error) {
