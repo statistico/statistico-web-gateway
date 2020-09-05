@@ -75,16 +75,30 @@ func (t *TeamStream) Recv() (*proto.Team, error) {
 	return args.Get(0).(*proto.Team), args.Error(1)
 }
 
-type ResultClient struct {
+type ResultGRPCClient struct {
 	mock.Mock
 }
 
-func (t *ResultClient) GetResultsForTeam(ctx context.Context, in *proto.TeamResultRequest, opts ...grpc.CallOption) (proto.ResultService_GetResultsForTeamClient, error) {
+func (r *ResultGRPCClient) ByID(ctx context.Context, fixtureID uint64) (*app.Result, error) {
+	args := r.Called(ctx, fixtureID)
+	return args.Get(0).(*app.Result), args.Error(1)
+}
+
+func (r *ResultGRPCClient) ByTeam(ctx context.Context, req *proto.TeamResultRequest) ([]*app.Result, error) {
+	args := r.Called(ctx, req)
+	return args.Get(0).([]*app.Result), args.Error(1)
+}
+
+type ResultProtoClient struct {
+	mock.Mock
+}
+
+func (t *ResultProtoClient) GetResultsForTeam(ctx context.Context, in *proto.TeamResultRequest, opts ...grpc.CallOption) (proto.ResultService_GetResultsForTeamClient, error) {
 	args := t.Called(ctx, in, opts)
 	return args.Get(0).(proto.ResultService_GetResultsForTeamClient), args.Error(1)
 }
 
-func (t *ResultClient) GetById(ctx context.Context, in *proto.ResultRequest, opts ...grpc.CallOption) (*proto.Result, error) {
+func (t *ResultProtoClient) GetById(ctx context.Context, in *proto.ResultRequest, opts ...grpc.CallOption) (*proto.Result, error) {
 	args := t.Called(ctx, in, opts)
 	return args.Get(0).(*proto.Result), args.Error(1)
 }
@@ -109,9 +123,9 @@ func (t *TeamStatClient) GetStatForTeam(ctx context.Context, in *proto.TeamStatR
 	return args.Get(0).(proto.TeamStatsService_GetStatForTeamClient), args.Error(1)
 }
 
-func (t *TeamStatClient) Stats(ctx context.Context, req *proto.TeamStatRequest) ([]*app.TeamStat, error) {
+func (t *TeamStatClient) Stats(ctx context.Context, req *proto.TeamStatRequest) (<-chan *app.TeamStat, chan error) {
 	args := t.Called(ctx, req)
-	return args.Get(0).([]*app.TeamStat), args.Error(1)
+	return args.Get(0).(<-chan *app.TeamStat), args.Get(1).(chan error)
 }
 
 type TeamStatStream struct {
