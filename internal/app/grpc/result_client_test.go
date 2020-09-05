@@ -25,7 +25,7 @@ func TestResultClient_ByTeam(t *testing.T) {
 	t.Run("calls result client and returns a slice of result struct", func(t *testing.T) {
 		t.Helper()
 
-		m := new(mock.ResultClient)
+		m := new(mock.ResultProtoClient)
 		logger, hook := test.NewNullLogger()
 		client := g.NewResultClient(m, logger)
 
@@ -56,7 +56,7 @@ func TestResultClient_ByTeam(t *testing.T) {
 	t.Run("returns error if invalid argument error returned by result client", func(t *testing.T) {
 		t.Helper()
 
-		m := new(mock.ResultClient)
+		m := new(mock.ResultProtoClient)
 		logger, hook := test.NewNullLogger()
 		client := g.NewResultClient(m, logger)
 
@@ -87,7 +87,7 @@ func TestResultClient_ByTeam(t *testing.T) {
 	t.Run("logs error and returns internal server error", func(t *testing.T) {
 		t.Helper()
 
-		m := new(mock.ResultClient)
+		m := new(mock.ResultProtoClient)
 		logger, hook := test.NewNullLogger()
 		client := g.NewResultClient(m, logger)
 
@@ -119,7 +119,7 @@ func TestResultClient_ByTeam(t *testing.T) {
 	t.Run("logs error and returns bad gateway error", func(t *testing.T) {
 		t.Helper()
 
-		m := new(mock.ResultClient)
+		m := new(mock.ResultProtoClient)
 		logger, hook := test.NewNullLogger()
 		client := g.NewResultClient(m, logger)
 
@@ -151,7 +151,7 @@ func TestResultClient_ByTeam(t *testing.T) {
 	t.Run("logs error and returns internal server error if error parsing stream", func(t *testing.T) {
 		t.Helper()
 
-		m := new(mock.ResultClient)
+		m := new(mock.ResultProtoClient)
 		logger, hook := test.NewNullLogger()
 		client := g.NewResultClient(m, logger)
 
@@ -187,7 +187,7 @@ func TestResultClient_ByID(t *testing.T) {
 	t.Run("returns a result struct", func(t *testing.T) {
 		t.Helper()
 
-		m := new(mock.ResultClient)
+		m := new(mock.ResultProtoClient)
 		logger, _ := test.NewNullLogger()
 		client := g.NewResultClient(m, logger)
 
@@ -213,7 +213,7 @@ func TestResultClient_ByID(t *testing.T) {
 	t.Run("returns not found error if returned by client", func(t *testing.T) {
 		t.Helper()
 
-		m := new(mock.ResultClient)
+		m := new(mock.ResultProtoClient)
 		logger, _ := test.NewNullLogger()
 		client := g.NewResultClient(m, logger)
 
@@ -242,7 +242,7 @@ func TestResultClient_ByID(t *testing.T) {
 	t.Run("logs error and returns internal server error if returned by client", func(t *testing.T) {
 		t.Helper()
 
-		m := new(mock.ResultClient)
+		m := new(mock.ResultProtoClient)
 		logger, hook := test.NewNullLogger()
 		client := g.NewResultClient(m, logger)
 
@@ -274,7 +274,7 @@ func TestResultClient_ByID(t *testing.T) {
 	t.Run("logs error and returns bad gateway error", func(t *testing.T) {
 		t.Helper()
 
-		m := new(mock.ResultClient)
+		m := new(mock.ResultProtoClient)
 		logger, hook := test.NewNullLogger()
 		client := g.NewResultClient(m, logger)
 

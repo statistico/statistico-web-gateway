@@ -122,7 +122,7 @@ func convertTeam(team *proto.Team) app.Team {
 	return t
 }
 
-func convertTeamStat(stat *proto.TeamStat) app.TeamStat {
+func convertTeamStat(stat *proto.TeamStat) *app.TeamStat {
 	s := app.TeamStat{
 		FixtureID: stat.FixtureId,
 		Stat:      stat.Stat,
@@ -132,7 +132,7 @@ func convertTeamStat(stat *proto.TeamStat) app.TeamStat {
 		s.Value = &stat.GetValue().Value
 	}
 
-	return s
+	return &s
 }
 
 func convertVenue(venue *proto.Venue) app.Venue {

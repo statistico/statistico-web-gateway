@@ -19,10 +19,25 @@ type TeamFilter struct {
 type TeamStatFilters struct {
 	DateAfter  *time.Time  `json:"dateAfter"`
 	DateBefore *time.Time  `json:"dateBefore"`
+	Include    *[]string   `json:"include"`
 	Limit      *uint64     `json:"limit"`
 	Opponent   *bool       `json:"opponent"`
 	SeasonIds  *[]uint64   `json:"seasonIds"`
 	Sort       *string     `json:"sort"`
 	Stat       string      `json:"stat"`
 	Team       TeamFilter `json:"team"`
+}
+
+func (t *TeamStatFilters) IncludesParameter(param string) bool {
+	if t.Include == nil {
+		return false
+	}
+
+	for _, p := range *t.Include {
+		if p == param {
+			return true
+		}
+	}
+
+	return false
 }
