@@ -1,6 +1,6 @@
 package bootstrap
 
-import "github.com/statistico/statistico-web-gateway/internal/app/rest"
+import "github.com/statistico/statistico-grpc-gateway/internal/app/rest"
 
 func (c Container) RestCompetitionHandler() *rest.CompetitionHandler {
 	return rest.NewCompetitionHandler(c.CompetitionComposer())
@@ -11,13 +11,9 @@ func (c Container) RestResultHandler() *rest.ResultHandler {
 }
 
 func (c Container) RestSeasonHandler() *rest.SeasonHandler {
-	return rest.NewSeasonHandler(c.CompetitionComposer(), c.SeasonComposer())
+	return rest.NewSeasonHandler(c.SeasonComposer())
 }
 
 func (c Container) RestTeamHandler() *rest.TeamHandler {
 	return rest.NewTeamHandler(c.TeamComposer())
-}
-
-func (c Container) RestTeamStatHandler() *rest.TeamStatHandler {
-	return rest.NewTeamStatHandler(c.TeamStatComposer())
 }

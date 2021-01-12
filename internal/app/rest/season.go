@@ -3,19 +3,18 @@ package rest
 import (
 	"errors"
 	"github.com/julienschmidt/httprouter"
-	"github.com/statistico/statistico-web-gateway/internal/app"
-	"github.com/statistico/statistico-web-gateway/internal/app/composer"
-	e "github.com/statistico/statistico-web-gateway/internal/app/errors"
+	"github.com/statistico/statistico-grpc-gateway/internal/app"
+	"github.com/statistico/statistico-grpc-gateway/internal/app/composer"
+	e "github.com/statistico/statistico-grpc-gateway/internal/app/errors"
 	"net/http"
 	"strconv"
 )
 
 type SeasonHandler struct {
-	competitionComposer composer.CompetitionComposer
-	seasonComposer composer.SeasonComposer
+	composer composer.SeasonComposer
 }
 
-func (s *SeasonHandler) ByCompetitionId(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (s *SeasonHandler) ByCompetitionID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	param := ps.ByName("id")
 	id, err := strconv.Atoi(param)
 
@@ -26,7 +25,7 @@ func (s *SeasonHandler) ByCompetitionId(w http.ResponseWriter, r *http.Request, 
 
 	sort := r.URL.Query().Get("sort")
 
-	seasons, err := s.competitionComposer.CompetitionSeasons(uint64(id), sort)
+	seasons, err := s.composer.ByCompetitionID(uint64(id), sort)
 
 	if err != nil {
 		if err == e.ErrorInternalServerError {
@@ -41,7 +40,7 @@ func (s *SeasonHandler) ByCompetitionId(w http.ResponseWriter, r *http.Request, 
 	seasonsResponse(w, seasons)
 }
 
-func (s *SeasonHandler) ByTeamId(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (s *SeasonHandler) ByTeamID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	param := ps.ByName("id")
 	id, err := strconv.Atoi(param)
 
@@ -52,7 +51,7 @@ func (s *SeasonHandler) ByTeamId(w http.ResponseWriter, r *http.Request, ps http
 
 	sort := r.URL.Query().Get("sort")
 
-	seasons, err := s.seasonComposer.ByTeamId(uint64(id), sort)
+	seasons, err := s.composer.ByTeamID(uint64(id), sort)
 
 	if err != nil {
 		if err == e.ErrorInternalServerError {
@@ -77,6 +76,6 @@ func seasonsResponse(w http.ResponseWriter, seasons []*app.Season) {
 	successResponse(w, http.StatusOK, payload)
 }
 
-func NewSeasonHandler(c composer.CompetitionComposer, s composer.SeasonComposer) *SeasonHandler {
-	return &SeasonHandler{competitionComposer: c, seasonComposer: s}
+func NewSeasonHandler(s composer.SeasonComposer) *SeasonHandler {
+	return &SeasonHandler{composer: s}
 }

@@ -3,9 +3,9 @@ package rest
 import (
 	"errors"
 	"github.com/julienschmidt/httprouter"
-	"github.com/statistico/statistico-web-gateway/internal/app"
-	"github.com/statistico/statistico-web-gateway/internal/app/composer"
-	e "github.com/statistico/statistico-web-gateway/internal/app/errors"
+	"github.com/statistico/statistico-grpc-gateway/internal/app"
+	"github.com/statistico/statistico-grpc-gateway/internal/app/composer"
+	e "github.com/statistico/statistico-grpc-gateway/internal/app/errors"
 	"net/http"
 	"strconv"
 )
@@ -14,7 +14,7 @@ type CompetitionHandler struct {
 	composer composer.CompetitionComposer
 }
 
-func (c *CompetitionHandler) ByCountryId(w http.ResponseWriter, _ *http.Request, ps httprouter.Params) {
+func (c *CompetitionHandler) ByCountryID(w http.ResponseWriter, _ *http.Request, ps httprouter.Params) {
 	param := ps.ByName("id")
 	id, err := strconv.Atoi(param)
 
@@ -23,7 +23,7 @@ func (c *CompetitionHandler) ByCountryId(w http.ResponseWriter, _ *http.Request,
 		return
 	}
 
-	competitions, err := c.composer.CompetitionsByCountryId(uint64(id))
+	competitions, err := c.composer.CompetitionsByCountryID(uint64(id))
 
 	if err != nil {
 		if err == e.ErrorInternalServerError {

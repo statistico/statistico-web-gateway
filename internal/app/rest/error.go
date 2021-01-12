@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	e "github.com/statistico/statistico-web-gateway/internal/app/errors"
+	e "github.com/statistico/statistico-grpc-gateway/internal/app/errors"
 	"net/http"
 )
 

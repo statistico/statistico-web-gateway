@@ -3,9 +3,8 @@ package rest
 import (
 	"errors"
 	"github.com/julienschmidt/httprouter"
-	"github.com/statistico/statistico-web-gateway/internal/app"
-	"github.com/statistico/statistico-web-gateway/internal/app/composer"
-	e "github.com/statistico/statistico-web-gateway/internal/app/errors"
+	"github.com/statistico/statistico-grpc-gateway/internal/app/composer"
+	e "github.com/statistico/statistico-grpc-gateway/internal/app/errors"
 	"net/http"
 	"strconv"
 )
@@ -14,7 +13,7 @@ type TeamHandler struct {
 	composer composer.TeamComposer
 }
 
-func (t *TeamHandler) TeamById(w http.ResponseWriter, _ *http.Request, ps httprouter.Params) {
+func (t *TeamHandler) ByID(w http.ResponseWriter, _ *http.Request, ps httprouter.Params) {
 	param := ps.ByName("id")
 	id, err := strconv.Atoi(param)
 
@@ -23,7 +22,7 @@ func (t *TeamHandler) TeamById(w http.ResponseWriter, _ *http.Request, ps httpro
 		return
 	}
 
-	team, err := t.composer.TeamById(uint64(id))
+	team, err := t.composer.ByID(uint64(id))
 
 	if err != nil {
 		if err == e.ErrorNotFound {
@@ -38,7 +37,7 @@ func (t *TeamHandler) TeamById(w http.ResponseWriter, _ *http.Request, ps httpro
 	teamResponse(w, team)
 }
 
-func (t *TeamHandler) TeamsBySeasonId(w http.ResponseWriter, _ *http.Request, ps httprouter.Params) {
+func (t *TeamHandler) BySeasonID(w http.ResponseWriter, _ *http.Request, ps httprouter.Params) {
 	param := ps.ByName("id")
 	id, err := strconv.Atoi(param)
 
@@ -47,7 +46,7 @@ func (t *TeamHandler) TeamsBySeasonId(w http.ResponseWriter, _ *http.Request, ps
 		return
 	}
 
-	teams, err := t.composer.TeamsBySeasonId(uint64(id))
+	teams, err := t.composer.BySeasonID(uint64(id))
 
 	if err != nil {
 		if err == e.ErrorInternalServerError {

@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
-	"github.com/statistico/statistico-web-gateway/internal/app"
-	"github.com/statistico/statistico-web-gateway/internal/app/composer"
+	"github.com/statistico/statistico-grpc-gateway/internal/app"
+	"github.com/statistico/statistico-grpc-gateway/internal/app/composer"
 	"net/http"
 )
 

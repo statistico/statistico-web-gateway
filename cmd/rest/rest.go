@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/julienschmidt/httprouter"
-	"github.com/statistico/statistico-web-gateway/internal/app/rest"
-	"github.com/statistico/statistico-web-gateway/internal/bootstrap"
+	"github.com/statistico/statistico-grpc-gateway/internal/app/rest"
+	"github.com/statistico/statistico-grpc-gateway/internal/bootstrap"
 	"log"
 	"net/http"
 )
@@ -17,13 +17,12 @@ func main() {
 	router.GET("/healthcheck", rest.HealthCheck)
 	router.GET("/openapi.json", rest.RenderApiDocs)
 
-	router.GET("/competition/:id/seasons", container.RestSeasonHandler().ByCompetitionId)
-	router.GET("/country/:id/competitions", container.RestCompetitionHandler().ByCountryId)
+	router.GET("/competition/:id/seasons", container.RestSeasonHandler().ByCompetitionID)
+	router.GET("/country/:id/competitions", container.RestCompetitionHandler().ByCountryID)
 	router.POST("/result-search", container.RestResultHandler().Fetch)
-	router.GET("/season/:id/teams", container.RestTeamHandler().TeamsBySeasonId)
-	router.GET("/team/:id", container.RestTeamHandler().TeamById)
-	router.GET("/team/:id/seasons", container.RestSeasonHandler().ByTeamId)
-	router.POST("/team-stat-search", container.RestTeamStatHandler().Fetch)
+	router.GET("/season/:id/teams", container.RestTeamHandler().BySeasonID)
+	router.GET("/team/:id", container.RestTeamHandler().ByID)
+	router.GET("/team/:id/seasons", container.RestSeasonHandler().ByTeamID)
 
 	server := rest.MiddlewarePipe(
 		router,

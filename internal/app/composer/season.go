@@ -2,22 +2,27 @@ package composer
 
 import (
 	"context"
-	"github.com/statistico/statistico-web-gateway/internal/app"
-	"github.com/statistico/statistico-web-gateway/internal/app/grpc"
+	"github.com/statistico/statistico-data-go-grpc-client"
+	"github.com/statistico/statistico-proto/go"
 )
 
 type SeasonComposer interface {
-	ByTeamId(teamId uint64, sort string) ([]*app.Season, error)
+	ByCompetitionID(teamId uint64, sort string) ([]*statisticoproto.Season, error)
+	ByTeamID(teamId uint64, sort string) ([]*statisticoproto.Season, error)
 }
 
 type seasonComposer struct {
-	client grpc.SeasonClient
+	client statisticodata.SeasonClient
 }
 
-func (s *seasonComposer) ByTeamId(teamId uint64, sort string) ([]*app.Season, error) {
-	return s.client.ByTeamId(context.Background(), teamId, sort)
+func (s *seasonComposer) ByCompetitionID(teamId uint64, sort string) ([]*statisticoproto.Season, error) {
+	return s.client.ByCompetitionID(context.Background(), teamId, sort)
 }
 
-func NewSeasonComposer(c grpc.SeasonClient) SeasonComposer {
+func (s *seasonComposer) ByTeamID(teamId uint64, sort string) ([]*statisticoproto.Season, error) {
+	return s.client.ByTeamID(context.Background(), teamId, sort)
+}
+
+func NewSeasonComposer(c statisticodata.SeasonClient) SeasonComposer {
 	return &seasonComposer{client: c}
 }
